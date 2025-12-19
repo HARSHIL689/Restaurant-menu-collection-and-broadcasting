@@ -22,7 +22,7 @@ public class RestaurantService {
             System.out.println("Phone: " + res.getPhone());
             System.out.println("Message: " + text);
         }
-        // many changes done
+        // many many changes done
     }
 }
 
