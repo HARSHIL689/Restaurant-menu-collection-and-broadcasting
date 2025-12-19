@@ -21,10 +21,7 @@ public class RestaurantService {
             System.out.println("Restaurant: " + res.getName());
             System.out.println("Phone: " + res.getPhone());
             System.out.println("Message: " + text);
-        } else {
-            System.out.println("Unknown restaurant");
-            System.out.println("Phone: " + phone);
-            System.out.println("Message: " + text);
         }
     }
 }
+
