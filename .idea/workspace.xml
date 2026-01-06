@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb146c9f-edbd-4467-a926-8a00eec8cbde" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/staymate/src/main/java/org/example/staymate/service/RestaurantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/staymate/src/main/java/org/example/staymate/service/RestaurantService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/MenuCollection/src/components/RestaurantCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/MenuCollection/src/components/RestaurantCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/MenuCollection/src/pages/MenuPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/MenuCollection/src/pages/MenuPage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,9 +18,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="37q3kLvQyltlIG6tF2rAxZkFI8q" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -25,8 +28,11 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",

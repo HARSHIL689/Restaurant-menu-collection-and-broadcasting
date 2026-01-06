@@ -1,10 +1,11 @@
-export function RestaurantCard({ restaurant, isSelected, onSelect }) {
+export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
   return (
     <div
-      onClick={onSelect}
+      onClick={!disabled ? onSelect : undefined}
       className={`
         bg-white rounded-lg p-5 transition cursor-pointer
         shadow-md hover:shadow-lg
+        ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:shadow-lg"}
         ${isSelected ? "ring-4 ring-green-500" : "ring-1 ring-gray-200"}
       `}
     >
@@ -12,14 +13,15 @@ export function RestaurantCard({ restaurant, isSelected, onSelect }) {
         {restaurant.restaurantName}
       </h3>
 
-      <pre className="text-gray-700 mb-3 whitespace-pre-wrap">
+      <pre className="whitespace-pre-wrap text-gray-700 mb-3">
         {restaurant.message}
       </pre>
 
       <div className="text-sm text-gray-600 mb-4">
         <p>Price: ₹{restaurant.price}</p>
         <p>
-          Date: {new Date(restaurant.createdDate).toLocaleString()}
+        Date:{" "}
+        {new Date(restaurant.createdDate).toLocaleString()}
         </p>
       </div>
 
