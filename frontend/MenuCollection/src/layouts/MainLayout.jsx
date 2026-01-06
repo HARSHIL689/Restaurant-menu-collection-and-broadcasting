@@ -6,7 +6,6 @@ export default function MainLayout({ children }) {
             PG Menu System
           </h1>
         </header>
-  
         <main className="max-w-6xl mx-auto px-6 py-6">
           {children}
         </main>

@@ -24,6 +24,8 @@ public class RestaurantService {
             System.out.println("Message: " + text);
             mn.setMessage(text);
             mn.setPhoneNumber(res.getPhone());
+            mn.setPrice(80);
+            mn.setRestaurantName("Dankawala");
             menuService.storeMenu(mn);
         }
     }
