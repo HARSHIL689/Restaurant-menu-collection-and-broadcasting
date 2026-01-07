@@ -7,22 +7,7 @@ import ResponseModal from "../components/ResponseModal";
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedMessage, setSelectedMessage] = useState(null);
     const [menu,setMenu]=useState([
-      // {
-      //   phoneNumber: "919510607101",
-      //   restaurantName: "Dankawala",
-      //   message:
-      //     "👉આજ સાંજ ની વાનગી👈\n૧ છાસ\n૨ સલાડ\n૩ સેવ લસણ\n૪ અડદ દાળ\n૫ રસાવાળા બટાકા\n૬ રોટલી\n૭ રોટલા\n૮ દાળ / ભાત\n૯ કઢી / ખીચડી",
-      //   price: 80,
-      //   createdDate: "2026-01-06T21:20:54.247049",
-      // },
-      // {
-      //   phoneNumber: "918799525425",
-      //   restaurantName: "Dankawala",
-      //   message:
-      //     "👉આજ સાંજ ની વાનગી👈\n૧ છાસ\n૨ સલાડ\n૩ સેવ લસણ\n૪ અડદ દાળ\n૫ રસાવાળા બટાકા\n૬ રોટલી\n૭ રોટલા\n૮ દાળ / ભાત\n૯ કઢી / ખીચડી",
-      //   price: 80,
-      //   createdDate: "2026-01-06T21:21:10.840064",
-      // },
+      
     ]);
 
     useEffect(()=>{
@@ -50,7 +35,7 @@ import ResponseModal from "../components/ResponseModal";
           },
           body: JSON.stringify(payload),
         });
-  
+        console.log("helo");
         setIsModalOpen(false);
         setHasSubmitted(true);
       } catch (err) {
@@ -82,8 +67,8 @@ import ResponseModal from "../components/ResponseModal";
       </div>
       <ResponseModal
         isOpen={isModalOpen}
-        restaurantName={selectedMessage?.restaurantName}
-        restaurantPhone={selectedMessage?.phoneNumber}
+        RestaurantName={selectedMessage?.restaurantName}
+        RestaurantPhoneNumber={selectedMessage?.phoneNumber}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmitResponse}
       />
