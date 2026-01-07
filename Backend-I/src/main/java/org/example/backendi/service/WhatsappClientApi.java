@@ -42,7 +42,6 @@ public class WhatsappClientApi {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
-
         HttpEntity<String> request = new HttpEntity<>(body, headers);
 
         restTemplate.postForEntity(url, request, String.class);
