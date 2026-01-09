@@ -42,7 +42,11 @@ import ResponseModal from "../components/ResponseModal";
     };
 
   return (
+<<<<<<< HEAD
     <div className="w-full">
+=======
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+>>>>>>> faf28e40a1076d00e375c92acbc8369db93d941c
       <h2 className="text-3xl font-extrabold mb-1 text-green-700">
         Today’s Menus
       </h2>
