@@ -6,9 +6,7 @@ import ResponseModal from "../components/ResponseModal";
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedMessage, setSelectedMessage] = useState(null);
-    const [menu,setMenu]=useState([
-      
-    ]);
+    const [menu,setMenu]=useState([]);
 
     useEffect(()=>{
       fetch('http://localhost:8080/api/message')
@@ -44,7 +42,7 @@ import ResponseModal from "../components/ResponseModal";
     };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="w-full">
       <h2 className="text-3xl font-extrabold mb-1 text-green-700">
         Today’s Menus
       </h2>
@@ -58,8 +56,8 @@ import ResponseModal from "../components/ResponseModal";
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {menu.map((res, index) => (
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {menu.map((res, index)=>(
           <RestaurantCard
             key={res.phoneNumber + res.createdDate}
             restaurant={res}

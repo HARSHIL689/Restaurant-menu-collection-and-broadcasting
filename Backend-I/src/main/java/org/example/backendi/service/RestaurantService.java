@@ -26,10 +26,10 @@ public class RestaurantService {
             mn.setPhoneNumber(res.getPhone());
             mn.setPrice(80);
             mn.setRestaurantName("Dankawala");
+            if (mn.getCount() == null) {
+                mn.setCount(0);
+            }
             menuService.storeMenu(mn);
         }
     }
-
-
-
 }

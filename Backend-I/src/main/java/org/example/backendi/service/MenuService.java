@@ -15,7 +15,6 @@ public class MenuService {
     public void storeMenu(MenuStore menuStore){
         menuStoreRepository.save(menuStore);
     }
-
     public List<MenuStore> getmenu() {
         return menuStoreRepository.findAll();
     }

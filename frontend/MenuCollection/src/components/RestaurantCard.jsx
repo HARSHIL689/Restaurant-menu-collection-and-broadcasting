@@ -3,7 +3,7 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
     <div 
       onClick={!disabled ? onSelect : undefined}
       className={`
-        flex flex-col
+        w-full flex flex-col
         bg-gradient-to-br from-white to-emerald-50
         rounded-2xl p-6 transition-all duration-200
         shadow-md hover:shadow-xl

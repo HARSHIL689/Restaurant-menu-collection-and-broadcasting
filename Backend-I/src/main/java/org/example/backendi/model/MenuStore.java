@@ -24,4 +24,6 @@ public class MenuStore {
     protected void onCreate() {
         this.createdDate = LocalDateTime.now();
     }
+    @Column(name="order_count",nullable = false)
+    private Integer count;
 }
