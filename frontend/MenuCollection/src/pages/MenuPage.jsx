@@ -45,13 +45,16 @@ import ResponseModal from "../components/ResponseModal";
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-1">
-        Today's Menus
+      <h2 className="text-3xl font-extrabold mb-1 text-green-700">
+        Today’s Menus
       </h2>
+      <p className="text-gray-600 mb-6">
+        Choose one restaurant and confirm your visit
+      </p>
 
       {hasSubmitted && (
-        <div className="bg-green-100 text-green-800 p-4 rounded mb-6">
-          Thank you! Your response has been submitted.
+        <div className="bg-green-100 border border-green-300 text-green-800 p-4 rounded-xl mb-6 shadow-sm">
+          🙏 Thank you! Your response has been recorded.
         </div>
       )}
 
