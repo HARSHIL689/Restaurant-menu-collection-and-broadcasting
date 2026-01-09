@@ -44,7 +44,7 @@ import ResponseModal from "../components/ResponseModal";
     };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
       <h2 className="text-3xl font-extrabold mb-1 text-green-700">
         Today’s Menus
       </h2>

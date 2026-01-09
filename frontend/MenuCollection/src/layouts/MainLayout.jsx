@@ -12,7 +12,7 @@ export default function MainLayout({ children }) {
           </div>
         </header>
 
-        <main className="max-w-6xl mx-auto px-6 py-6">
+        <main className="w-full px-6 py-6">
           {children}
         </main>
       </div>
