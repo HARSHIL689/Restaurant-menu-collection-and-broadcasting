@@ -1,31 +1,39 @@
 export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
   return (
-    <div
+    <div 
       onClick={!disabled ? onSelect : undefined}
       className={`
-        bg-white rounded-lg p-5 transition cursor-pointer
-        shadow-md hover:shadow-lg
-        ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:shadow-lg"}
-        ${isSelected ? "ring-4 ring-green-500" : "ring-1 ring-gray-200"}
+        flex flex-col
+        bg-gradient-to-br from-white to-emerald-50
+        rounded-2xl p-6 transition-all duration-200
+        shadow-md hover:shadow-xl
+        border
+        ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+        ${isSelected ? "border-green-600 ring-2 ring-green-500" : "border-emerald-200"}
       `}
     >
-      <h3 className="text-lg font-semibold mb-2">
+      <h3 className="text-xl font-extrabold mb-3 text-green-700 tracking-wide">
         {restaurant.restaurantName}
       </h3>
 
-      <pre className="whitespace-pre-wrap text-gray-700 mb-3">
+      <pre className="whitespace-pre-wrap
+        text-gray-700 text-sm leading-relaxed
+         bg-white rounded-xl p-4 mb-4
+          border border-emerald-100
+          shadow-inner">
         {restaurant.message}
       </pre>
 
-      <div className="text-sm text-gray-600 mb-4">
-        <p>Price: ₹{restaurant.price}</p>
-        <p>
-        Date:{" "}
-        {new Date(restaurant.createdDate).toLocaleString()}
-        </p>
+      <div className="flex items-center justify-between mb-6">
+        <span className="bg-green-600 text-white px-4 py-1 rounded-full text-sm font-bold">
+          ₹ {restaurant.price}
+        </span>
+        <span className="text-xs text-gray-500">
+          {new Date(restaurant.createdDate).toLocaleString()}
+        </span>
       </div>
 
-      <div className="mt-4 border-t pt-4">
+      <div className="mt-auto">
         <button
           type="button"
           onClick={(e) => {
@@ -33,16 +41,16 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
             onSelect();
           }}
           className={`
-            w-full py-2 rounded-md text-sm font-semibold
-            border-2
+            w-full py-2.5 rounded-xl text-sm font-bold transition-all
+            
             ${
               isSelected
-                ? "bg-green-600 text-white border-green-600"
-                : "bg-white text-green-600 border-green-600 hover:bg-green-50"
+                ? "bg-green-600 text-white"
+                : "bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:opacity-90"
             }
           `}
         >
-          {isSelected ? "Selected" : "Select Restaurant"}
+          {isSelected ? "✔ Selected" : "Select Restaurant"}
         </button>
       </div>
     </div>
