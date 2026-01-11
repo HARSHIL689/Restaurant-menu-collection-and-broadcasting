@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 public class MenuStore {
     @Id
     private String phoneNumber;
-    private String restaurantName;
     private String message;
     int price;
     @Column(nullable = false,updatable = false)
@@ -24,6 +23,9 @@ public class MenuStore {
     protected void onCreate() {
         this.createdDate = LocalDateTime.now();
     }
-    @Column(name="order_count",nullable = false)
-    private Integer count;
+    @OneToOne(cascade = CascadeType.ALL)
+    Restaurant restaurant;
+    @Column(name="order_limit")
+    int limit;
+    private Integer OrerCount;
 }

@@ -24,11 +24,11 @@ public class RestaurantService {
             System.out.println("Message: " + text);
             mn.setMessage(text);
             mn.setPhoneNumber(res.getPhone());
-            mn.setPrice(80);
-            mn.setRestaurantName("Dankawala");
-            if (mn.getCount() == null) {
-                mn.setCount(0);
+            if (mn.getOrerCount() == null) {
+                mn.setOrerCount(0);
             }
+            mn.setRestaurant(res);
+
             menuService.storeMenu(mn);
         }
     }
