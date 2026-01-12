@@ -21,30 +21,32 @@ class WhatsappClientApi {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-//    public void sendLimitMessage(String message){
-//        String url = "https://graph.facebook.com/v19.0/" + phoneId + "/messages";
-//
-//        Map<String, Object> text = new HashMap<>();
-//        text.put("body","Set Limit"
-//        );
-//
-//        Map<String, Object> body = new HashMap<>();
-//        body.put("messaging_product", "whatsapp");
-//        body.put("to", restaurantPhone);
-//        body.put("type", "text");
-//        body.put("text", text);
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setBearerAuth(token);
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//
-//        HttpEntity<Map<String, Object>> request =
-//                new HttpEntity<>(body, headers);
-//
-//        restTemplate.postForEntity(url, request, String.class);
-//
-//    }
-        public void sendOrderMessage(
+    public void sendText(String to, String message) {
+
+        String url = "https://graph.facebook.com/v19.0/" + phoneId + "/messages";
+
+        Map<String, Object> text = new HashMap<>();
+        text.put("body", message);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("messaging_product", "whatsapp");
+        body.put("to", to);
+        body.put("type", "text");
+        body.put("text", text);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        restTemplate.postForEntity(
+                url,
+                new HttpEntity<>(body, headers),
+                String.class
+        );
+    }
+
+
+    public void sendOrderMessage(
             String restaurantPhone,
             String userName,
             String userMobile,

@@ -1,11 +1,15 @@
 package org.example.backendi.service;
 
 import org.example.backendi.model.MenuStore;
+import org.example.backendi.model.dto.MenuResponse;
 import org.example.backendi.repo.MenuStoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 public class MenuService {
@@ -15,7 +19,22 @@ public class MenuService {
     public void storeMenu(MenuStore menuStore){
         menuStoreRepository.save(menuStore);
     }
-    public List<MenuStore> getmenu() {
-        return menuStoreRepository.findAll();
+    public List<MenuResponse> getmenu() {
+        List<MenuStore> mn=menuStoreRepository.findAll();
+        List<MenuResponse> menuResponses=new ArrayList<>();
+        for(MenuStore m:mn){
+            MenuResponse menuResponse=new MenuResponse(
+                    m.getPhoneNumber(),
+                    m.getMessage(),
+                    m.getPrice(),
+                    m.getCreatedDate(),
+                    m.getRestaurant().getRestaurantName(),
+                    m.getLimit(),
+                    m.getTime_limit()
+            );
+            menuResponses.add(menuResponse);
+        }
+        return menuResponses;
     }
+
 }

@@ -26,10 +26,6 @@ public class orderService {
     int newcount=0;
     public void fetchorder(orderRequest orderRequest) {
         MenuStore mn=menuStoreRepository.findById(orderRequest.RestaurantPhoneNumber()).orElse(null);
-        previouscount=mn.getOrerCount();
-        newcount=previouscount+1;
-        mn.setOrerCount(newcount);
-        menuStoreRepository.save(mn);
         CustomerInfo customerInfo = new CustomerInfo();
         customerInfo.setPhoneNumber(orderRequest.PhoneNumber());
         customerInfo.setAddress(orderRequest.Address());

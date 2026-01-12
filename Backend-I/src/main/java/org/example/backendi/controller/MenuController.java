@@ -2,6 +2,7 @@ package org.example.backendi.controller;
 
 import org.example.backendi.model.CustomerInfo;
 import org.example.backendi.model.MenuStore;
+import org.example.backendi.model.dto.MenuResponse;
 import org.example.backendi.model.dto.orderRequest;
 import org.example.backendi.service.MenuService;
 import org.example.backendi.service.orderService;
@@ -21,7 +22,7 @@ public class MenuController {
     private orderService orderService;
 
     @GetMapping("api/message")
-    public List<MenuStore> getMenus(){
+    public List<MenuResponse> getMenus(){
         return menuService.getmenu();
     }
 

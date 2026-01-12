@@ -16,7 +16,6 @@ public class MenuStore {
     @Id
     private String phoneNumber;
     private String message;
-    int price;
     @Column(nullable = false,updatable = false)
     private LocalDateTime createdDate;
     @PrePersist
@@ -26,6 +25,11 @@ public class MenuStore {
     @OneToOne(cascade = CascadeType.ALL)
     Restaurant restaurant;
     @Column(name="order_limit")
-    int limit;
+    private Integer limit;
+    int price;
+    @Column(name="time_limit")
+    private String time_limit;
     private Integer OrerCount;
+    @Column(name = "state")
+    private String state;
 }

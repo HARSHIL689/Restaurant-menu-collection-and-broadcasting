@@ -34,27 +34,43 @@ public class RestaurantController {
 
     @PostMapping
     public ResponseEntity<String> receiveMessage(@RequestBody String payload) {
-        try {
-            //System.out.println("RAW PAYLOAD RECEIVED:");
-            //System.out.println(payload);
 
+        try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(payload);
 
+            JsonNode entryArray = rootNode.path("entry");
+            if (!entryArray.isArray() || entryArray.isEmpty()) {
+                return ResponseEntity.ok("NO_ENTRY");
+            }
+
+            JsonNode changesArray = entryArray.get(0).path("changes");
+            if (!changesArray.isArray() || changesArray.isEmpty()) {
+                return ResponseEntity.ok("NO_CHANGES");
+            }
+
             JsonNode messagesArray =
-                    rootNode.path("entry").get(0)
-                            .path("changes").get(0)
+                    changesArray.get(0)
                             .path("value")
                             .path("messages");
 
-            if (messagesArray.isArray()) {
-                for (JsonNode messageNode : messagesArray) {
-                    restaurantService.getRestaurantdetails(messageNode);
-                }
+            if (!messagesArray.isArray()) {
+                return ResponseEntity.ok("NO_MESSAGES");
             }
+
+            for (JsonNode messageNode : messagesArray) {
+
+                if (!"text".equals(messageNode.path("type").asText())) {
+                    continue;
+                }
+
+                restaurantService.getRestaurantdetails(messageNode);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok("EVENT_RECEIVED") ;
+        return ResponseEntity.ok("EVENT_RECEIVED");
     }
+
 }
