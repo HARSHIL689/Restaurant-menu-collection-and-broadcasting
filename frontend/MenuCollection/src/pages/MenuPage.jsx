@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import RestaurantCard from "../components/RestaurantCard";
 import ResponseModal from "../components/ResponseModal";
 
+  
   export function MenuPage() {
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -9,16 +10,26 @@ import ResponseModal from "../components/ResponseModal";
     const [menu,setMenu]=useState([]);
 
     useEffect(()=>{
-      fetch('http://localhost:8080/api/message')
-      .then((res)=>res.json())
-      .then((data)=>{
-        setMenu(data)
-      })
-      .catch((err) => console.error(err));
+        fetch('http://localhost:8080/api/message')
+        .then((res)=>res.json())
+        .then((data)=>{
+           const menuWithCount = data.map((data) => ({
+            ...data,
+            order_count: 0, 
+          }));
+          setMenu(menuWithCount);
+        })
+        .catch((err) => console.error(err));
+      
     },[])
 
     const handleSelect = (msg) => {
       if (hasSubmitted) return;
+      if (msg.order_count >= msg.limit) {
+        alert("Order limit reached for this restaurant");
+        return;
+      }
+
       setSelectedMessage(msg);
       setIsModalOpen(true);
     };
@@ -33,7 +44,15 @@ import ResponseModal from "../components/ResponseModal";
           },
           body: JSON.stringify(payload),
         });
-        console.log("helo");
+
+        setMenu((prev) =>
+          prev.map((item) =>
+            item.phoneNumber === selectedMessage.phoneNumber
+              ? { ...item, order_count: item.order_count + 1 }
+              : item
+          )
+        );
+
         setIsModalOpen(false);
         setHasSubmitted(true);
       } catch (err) {
@@ -59,11 +78,12 @@ import ResponseModal from "../components/ResponseModal";
       )}
 
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {menu.map((res, index)=>(
+        {menu.map((res)=>(
           <RestaurantCard
-            key={res.phoneNumber + res.createdDate}
+            key={res.phoneNumber}
             restaurant={res}
             isSelected={selectedMessage === res}
+            disabled={res.order_count >= res.limit}
             onSelect={() => handleSelect(res)}
           />
         ))}
