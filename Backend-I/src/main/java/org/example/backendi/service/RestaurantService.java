@@ -8,102 +8,99 @@ import org.example.backendi.repo.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-    @Service
-    public class RestaurantService {
+@Service
+public class RestaurantService {
 
-        @Autowired
-        private RestaurantRepository restaurantRepository;
+    @Autowired
+    private RestaurantRepository restaurantRepository;
 
-        @Autowired
-        private MenuStoreRepository menuStoreRepository;
+    @Autowired
+    private MenuStoreRepository menuStoreRepository;
 
-        @Autowired
-        private WhatsappClientApi wap;
+    @Autowired
+    private WhatsappClientApi wap;
 
-        public void getRestaurantdetails(JsonNode messagesNode) {
+    public void getRestaurantdetails(JsonNode messagesNode) {
 
-            String phone = messagesNode.path("from").asText();
-            String text = messagesNode.path("text").path("body").asText().trim();
+        String phone = messagesNode.path("from").asText();
+        String text = messagesNode.path("text").path("body").asText().trim();
 
+        Restaurant res = restaurantRepository.findByPhone(phone);
+        if (res == null) return;
 
-            Restaurant res = restaurantRepository.findByPhone(phone);
-            if (res == null) {
-                return;
-            }
+        MenuStore mn = menuStoreRepository
+                .findById(res.getPhone())
+                .orElse(new MenuStore());
 
-            MenuStore mn = menuStoreRepository
-                    .findById(res.getPhone())
-                    .orElse(new MenuStore());
-
-            mn.setPhoneNumber(res.getPhone());
-            mn.setRestaurant(res);
+        mn.setPhoneNumber(res.getPhone());
+        mn.setRestaurant(res);
 
 
-            if (mn.getState() == null) {
-                mn.setState("WAITING_MENU");
-            }
+        if (mn.getState() == null) {
+            mn.setState("WAITING_MENU");
+            menuStoreRepository.save(mn);
+        }
 
-            String state;
-            if(text.equals("RESET")){
-                System.out.println("RESET");
-                state="RESET";
-            }else{
-                state=mn.getState();
-            }
-            switch (state) {
+        if (text.equalsIgnoreCase("RESET")) {
+            resetMenu(mn);
+            menuStoreRepository.save(mn);
+            wap.sendText(phone, "🔄 Menu reset. Please send menu name again.");
+            return;
+        }
 
-                case "WAITING_MENU":
-                    mn.setMessage(text);
-                    mn.setState("WAITING_PRICE");
+        switch (mn.getState()) {
+
+            case "WAITING_MENU":
+                mn.setMessage(text);
+                mn.setState("WAITING_PRICE");
+                menuStoreRepository.save(mn);
+                wap.sendText(phone, "💰 Please enter price");
+                break;
+
+            case "WAITING_PRICE":
+                try {
+                    mn.setPrice(Integer.parseInt(text));
+                    mn.setState("WAITING_LIMIT");
                     menuStoreRepository.save(mn);
+                    wap.sendText(phone, "⚠ Please enter order limit");
+                } catch (NumberFormatException e) {
+                    wap.sendText(phone, "❌ Invalid price. Enter a number.");
+                }
+                break;
 
-                    wap.sendText(phone, "💰 Please enter price or if repeat process  then type Reset");
-                    break;
-
-                case "WAITING_PRICE":
-                    try {
-                        mn.setPrice(Integer.parseInt(text));
-                        mn.setState("WAITING_LIMIT");
-                        menuStoreRepository.save(mn);
-
-                        wap.sendText(phone, "⚠ Please enter order limit or if repeat process  then type Reset");
-                    } catch (NumberFormatException e) {
-                        wap.sendText(phone, "❌ Invalid price. Enter a number.");
-                    }
-                    break;
-
-                case "WAITING_LIMIT":
-                    try {
-                        mn.setLimit(Integer.parseInt(text));
-                        //System.out.println(mn.getLimit());
-                        mn.setOrerCount(0);
-                        mn.setState("WAITING_TIME");
-                        menuStoreRepository.save(mn);
-
-                        wap.sendText(phone, "⏰ Please enter time limit (e.g. 10:30 AM) or if repeat process  then type Reset");
-                    } catch (NumberFormatException e) {
-                        wap.sendText(phone, "❌ Invalid limit. Enter a number.");
-                    }
-                    break;
-
-                case "WAITING_TIME":
-                    mn.setTime_limit(text);
-                    mn.setState("COMPLETED");
+            case "WAITING_LIMIT":
+                try {
+                    mn.setLimit(Integer.parseInt(text));
+                    mn.setOrerCount(0);
+                    mn.setState("WAITING_TIME");
                     menuStoreRepository.save(mn);
-                    wap.sendText(phone, "✅ Menu setup completed successfully");
-                    break;
+                    wap.sendText(phone, "⏰ Please enter time limit (e.g. 10:30 AM)");
+                } catch (NumberFormatException e) {
+                    wap.sendText(phone, "❌ Invalid limit. Enter a number.");
+                }
+                break;
 
-                case "COMPLETED":
-                    mn.setState("RESET");
-                    menuStoreRepository.save(mn);
-                    wap.sendText(phone, "ℹ Menu already configured. Type RESET to reconfigure.");
-                    break;
+            case "WAITING_TIME":
+                mn.setTime_limit(text);
+                mn.setState("COMPLETED");
+                menuStoreRepository.save(mn);
+                wap.sendText(phone, "✅ Menu setup completed successfully");
+                break;
 
-                case "RESET":
-                    mn.setState(null);
-                    menuStoreRepository.save(mn);
-                    wap.sendText(phone,"again send menu");
-                    break;
-            }
+            case "COMPLETED":
+                wap.sendText(phone, "ℹ Menu already configured. Type RESET to reconfigure.");
+                break;
+
+            default:
+                wap.sendText(phone, "❓ Unknown state. Type RESET to start again.");
         }
     }
+    private void resetMenu(MenuStore mn) {
+        mn.setMessage(null);
+        mn.setPrice(0);
+        mn.setLimit(null);
+        mn.setTime_limit(null);
+        mn.setOrerCount(0);
+        mn.setState("WAITING_MENU");
+    }
+}

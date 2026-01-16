@@ -9,5 +9,5 @@ public record MenuResponse (
         LocalDateTime createdDate,
         String RestaurantName,
         int limit,
-        String time
+        int orderCount
 ){}

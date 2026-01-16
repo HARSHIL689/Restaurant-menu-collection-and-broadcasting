@@ -19,6 +19,7 @@ public class MenuService {
     public void storeMenu(MenuStore menuStore){
         menuStoreRepository.save(menuStore);
     }
+
     public List<MenuResponse> getmenu() {
         List<MenuStore> mn=menuStoreRepository.findAll();
         List<MenuResponse> menuResponses=new ArrayList<>();
@@ -30,7 +31,7 @@ public class MenuService {
                     m.getCreatedDate(),
                     m.getRestaurant().getRestaurantName(),
                     m.getLimit(),
-                    m.getTime_limit()
+                    m.getOrerCount()
             );
             menuResponses.add(menuResponse);
         }
