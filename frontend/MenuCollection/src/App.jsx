@@ -28,13 +28,13 @@ function App() {
         <Route
           path="/menus"
           element={
-            isLoggedIn() ? (
+            // isLoggedIn() ? (
               <MainLayout>
                 <MenuPage />
               </MainLayout>
-            ) : (
-              <Navigate to="/login" />
-            )
+            //) : (
+              // <Navigate to="/login" />
+            // )
           }
         />
 

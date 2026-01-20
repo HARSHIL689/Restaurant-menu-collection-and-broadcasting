@@ -39,13 +39,10 @@ public class orderService {
                 .findById(request.restaurantPhoneNumber())
                 .orElseThrow(() -> new RuntimeException("Menu not found"));
 
-
-        if (menuStore.getOrerCount() >= menuStore.getLimit()) {
-            throw new RuntimeException("Order limit reached");
+        int newCount = menuStore.getOrerCount() + request.quantity();
+        if (newCount > menuStore.getLimit()) {
+            throw new RuntimeException("Order limit exceeded");
         }
-
-
-        int newCount = menuStore.getOrerCount() + 1;
         menuStore.setOrerCount(newCount);
         menuStoreRepository.save(menuStore);
 
@@ -54,6 +51,7 @@ public class orderService {
         order.setUser(user);
         order.setMenuStore(menuStore);
         order.setAddress(request.address());
+        order.setQuantity(request.quantity());
         orderRepo.save(order);
 
 
@@ -67,7 +65,7 @@ public class orderService {
                 user.getName(),
                 user.getPhone(),
                 request.address(),
-                newCount
+                request.quantity()
         );
     }
 }

@@ -1,22 +1,41 @@
 import { useEffect, useState } from "react";
 import RestaurantCard from "../components/RestaurantCard";
 import ResponseModal from "../components/ResponseModal";
+import menuDummyData from "../data/menuDummyData";
+
 
 export function MenuPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [menu, setMenu] = useState([]);
 
-  const fetchMenu = async () => {
-    const res = await fetch("http://localhost:8080/api/message");
-    const data = await res.json();
-    setMenu(data);
-  };
+  const fetchMenu = () => {
+    setMenu(menuDummyData);
+  };  
+
+  // const fetchMenu = async () => {
+  //   const res = await fetch("http://localhost:8080/api/message");
+  //   const data = await res.json();
+  //   setMenu(data);
+  // };
 
   useEffect(() => {
     fetchMenu();
   }, []);
 
+  const updateOrderCount = (restaurantPhoneNumber, quantity) => {
+    setMenu((prevMenu) =>
+      prevMenu.map((item) =>
+        item.phoneNumber === restaurantPhoneNumber
+          ? {
+              ...item,
+              orderCount: item.orderCount + quantity,
+            }
+          : item
+      )
+    );
+  };
+  
   const handleSelect = (restaurant) => {
     if (restaurant.orderCount >= restaurant.limit) {
       alert("Order limit reached for this restaurant");
@@ -26,24 +45,24 @@ export function MenuPage() {
     setIsModalOpen(true);
   };
 
-  const handleSubmitResponse = async (payload) => {
-    try {
-      await fetch("http://localhost:8080/api/response", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-USER-PHONE": localStorage.getItem("userPhone"),
-        },
-        body: JSON.stringify(payload),
-      });
-
-      await fetchMenu(); // refresh real count from backend
-      setIsModalOpen(false);
-      setSelectedRestaurant(null);
-    } catch (err) {
-      alert(err.message || "Order limit reached");
-    }
-  };
+  // const handleSubmitResponse = async (payload) => {
+  //   try {
+  //     await fetch("http://localhost:8080/api/response", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "X-USER-PHONE": localStorage.getItem("userPhone"),
+  //       },
+  //       body: JSON.stringify(payload),
+  //     });
+  //     updateOrderCount(payload.restaurantPhoneNumber, payload.quantity);
+  //     await fetchMenu(); // refresh real count from backend
+  //     setIsModalOpen(false);
+  //     setSelectedRestaurant(null);
+  //   } catch (err) {
+  //     alert(err.message || "Order limit reached");
+  //   }
+  // };
 
   return (
     <div className="w-full">
@@ -67,10 +86,21 @@ export function MenuPage() {
 
       <ResponseModal
         isOpen={isModalOpen}
-        RestaurantName={selectedRestaurant?.restaurantName}
+        RestaurantName={selectedRestaurant?.RestaurantName}
         RestaurantPhoneNumber={selectedRestaurant?.phoneNumber}
+        price={selectedRestaurant?.price || 0}
+        remainingSlots={
+          selectedRestaurant
+            ? selectedRestaurant.limit - selectedRestaurant.orderCount
+            : 0
+        }
         onClose={() => setIsModalOpen(false)}
-        onSubmit={handleSubmitResponse}
+        // onSubmit={handleSubmitResponse}
+        onSubmit={(payload) => {
+          updateOrderCount(payload.restaurantPhoneNumber, payload.quantity);
+          setIsModalOpen(false);
+          setSelectedRestaurant(null);
+        }}
       />
     </div>
   );

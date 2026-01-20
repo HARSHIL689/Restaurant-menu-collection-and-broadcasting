@@ -29,6 +29,8 @@ public class Order {
     @Column(nullable = false)
     private String address;
 
+    private int quantity;
+
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 }

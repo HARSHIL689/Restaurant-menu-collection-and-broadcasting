@@ -1,15 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function ResponseModal({
   isOpen,
   RestaurantName,
   RestaurantPhoneNumber,
+  price,
+  remainingSlots,
   onClose,
   onSubmit,
 }) {
   const [address, setAddress] = useState("");
+  const [quantity, setQuantity] = useState(1);
+
+  const remaining = Number.isFinite(remainingSlots) ? remainingSlots : 0;
+  const maxAllowedQuantity = Math.min(5, remaining);
+  const safeMaxQuantity = maxAllowedQuantity > 0 ? maxAllowedQuantity : 1;
+
+
+  useEffect(() => {
+    if (quantity > maxAllowedQuantity) {
+      setQuantity(maxAllowedQuantity);
+    }
+  }, [maxAllowedQuantity, quantity]);
 
   if (!isOpen) return null;
+
+  const totalAmount = price * quantity;
 
   const handleSubmit = () => {
     if (!address.trim()) {
@@ -21,9 +37,13 @@ function ResponseModal({
       restaurantName: RestaurantName,
       restaurantPhoneNumber: RestaurantPhoneNumber,
       address,
+      quantity,
+      totalAmount,
     });
 
     setAddress("");
+    setQuantity(1);
+    onClose();
   };
 
   return (
@@ -33,6 +53,28 @@ function ResponseModal({
           Confirm – {RestaurantName}
         </h3>
 
+        <label className="block text-sm font-semibold mb-1">
+          Number of Orders
+        </label>
+        <select
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+          className="w-full border rounded p-2 mb-4"
+        >
+          {Array.from({ length: safeMaxQuantity }, (_, i) => i + 1).map(
+            (num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            )
+          )}
+          {/* <option value={1}>1</option>
+          <option value={2}>2</option>
+          <option value={3}>3</option>
+          <option value={4}>4</option>
+          <option value={5}>5</option> */}
+        </select>
+
         <textarea
           placeholder="Enter address"
           value={address}
@@ -40,13 +82,21 @@ function ResponseModal({
           className="w-full border rounded p-2 mb-4"
         />
 
+        <div className="mb-4 text-right font-semibold text-green-700">
+          Total: ₹ {totalAmount}
+        </div>
+
         <div className="flex justify-end gap-2">
           <button onClick={onClose} className="px-3 py-1 border rounded">
             Cancel
           </button>
           <button
-            onClick={handleSubmit}
-            className="bg-green-600 text-white px-4 py-2 rounded"
+            disabled={!address.trim()}
+            className="bg-green-600 disabled:bg-gray-400 text-white px-4 py-2 rounded"
+            onClick={() => {
+              console.log("Submit clicked");
+              handleSubmit();
+            }}
           >
             Submit
           </button>
