@@ -31,9 +31,9 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Verification failed");
     }
 
-
     @PostMapping
     public ResponseEntity<String> receiveMessage(@RequestBody String payload) {
+
 
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -63,7 +63,7 @@ public class RestaurantController {
                 if (!"text".equals(messageNode.path("type").asText())) {
                     continue;
                 }
-
+                System.out.println(messageNode);
                 restaurantService.getRestaurantdetails(messageNode);
             }
 

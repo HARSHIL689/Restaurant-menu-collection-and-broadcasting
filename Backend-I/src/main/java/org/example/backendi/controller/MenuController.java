@@ -5,6 +5,8 @@ import org.example.backendi.model.dto.orderRequest;
 import org.example.backendi.service.MenuService;
 import org.example.backendi.service.orderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,10 +27,30 @@ public class MenuController {
     }
 
     @PostMapping("api/response")
-    public void fetchdata(
+    public ResponseEntity<?> fetchdata(
             @RequestBody orderRequest request,
-            @RequestHeader("X-USER-PHONE") String userPhone
-    ){
-        orderService.fetchorder(request, userPhone);
+            @RequestHeader(value = "X-USER-PHONE", required = false) String userPhone
+    ) {
+
+        if (userPhone == null || userPhone.isBlank()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Missing X-USER-PHONE header");
+        }
+
+        try {
+            orderService.fetchorder(request, userPhone);
+            return ResponseEntity.ok().build();
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(e.getMessage());
+        }
     }
 }

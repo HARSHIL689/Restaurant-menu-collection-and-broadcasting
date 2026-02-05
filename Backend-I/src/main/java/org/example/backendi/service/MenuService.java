@@ -25,8 +25,8 @@ public class MenuService {
         List<MenuResponse> menuResponses=new ArrayList<>();
         for(MenuStore m:mn){
             MenuResponse menuResponse=new MenuResponse(
-                    m.getPhoneNumber(),
-                    m.getMessage(),
+                    m.getPhone(),
+                    m.getMenu(),
                     m.getPrice(),
                     m.getCreatedDate(),
                     m.getRestaurant().getRestaurantName(),

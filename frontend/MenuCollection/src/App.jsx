@@ -23,21 +23,14 @@ function App() {
           path="/dashboard"
           element={isLoggedIn() ? <Dashboard /> : <Navigate to="/login" />}
         />
-
-        {/* ✅ WRAP MENU PAGE WITH MAIN LAYOUT */}
         <Route
           path="/menus"
           element={
-            // isLoggedIn() ? (
               <MainLayout>
                 <MenuPage />
               </MainLayout>
-            //) : (
-              // <Navigate to="/login" />
-            // )
           }
         />
-
       </Routes>
     </BrowserRouter>
   );

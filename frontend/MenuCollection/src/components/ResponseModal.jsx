@@ -6,6 +6,7 @@ function ResponseModal({
   RestaurantPhoneNumber,
   price,
   remainingSlots,
+  submitting,
   onClose,
   onSubmit,
 }) {
@@ -23,11 +24,19 @@ function ResponseModal({
     }
   }, [maxAllowedQuantity, quantity]);
 
+  useEffect(() => {
+    if (isOpen) {
+      setQuantity(1);
+      setAddress("");
+    }
+  }, [isOpen]);  
+
   if (!isOpen) return null;
 
   const totalAmount = price * quantity;
 
   const handleSubmit = () => {
+    if (submitting) return;
     if (!address.trim()) {
       alert("Address is required");
       return;
@@ -68,11 +77,6 @@ function ResponseModal({
               </option>
             )
           )}
-          {/* <option value={1}>1</option>
-          <option value={2}>2</option>
-          <option value={3}>3</option>
-          <option value={4}>4</option>
-          <option value={5}>5</option> */}
         </select>
 
         <textarea
@@ -91,14 +95,14 @@ function ResponseModal({
             Cancel
           </button>
           <button
-            disabled={!address.trim()}
+            disabled={!address.trim() || submitting}
             className="bg-green-600 disabled:bg-gray-400 text-white px-4 py-2 rounded"
             onClick={() => {
               console.log("Submit clicked");
               handleSubmit();
             }}
           >
-            Submit
+            {submitting ? "Placing Order..." : "Submit"}
           </button>
         </div>
       </div>

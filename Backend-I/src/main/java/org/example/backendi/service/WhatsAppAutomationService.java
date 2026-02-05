@@ -34,18 +34,18 @@ public class WhatsAppAutomationService {
     public void startMenuFlow(Restaurant res) {
 
         MenuStore menu = menuStoreRepository
-                .findById(res.getPhone())
+                .findByPhone(res.getPhone())
                 .orElse(null);
 
         if (menu == null) return;
 
-        String studentPhone = menu.getPhoneNumber(); // mapped user
+        String studentPhone = menu.getPhone(); // mapped user
 
         ScheduledExecutorService scheduler =
                 getScheduler(res.getPhone());
 
         scheduler.schedule(() ->
-                        wap.sendText(studentPhone, "🍽 MENU:\n" + menu.getMessage()),
+                        wap.sendText(studentPhone, "🍽 MENU:\n" + menu.getMenu()),
                 0, TimeUnit.SECONDS);
 
         scheduler.schedule(() ->

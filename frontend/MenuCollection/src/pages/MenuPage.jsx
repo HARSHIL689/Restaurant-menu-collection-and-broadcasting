@@ -1,27 +1,47 @@
 import { useEffect, useState } from "react";
 import RestaurantCard from "../components/RestaurantCard";
 import ResponseModal from "../components/ResponseModal";
-import menuDummyData from "../data/menuDummyData";
 
 
 export function MenuPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [menu, setMenu] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
 
-  const fetchMenu = () => {
-    setMenu(menuDummyData);
-  };  
+  // const fetchMenu = (() => {
+  //   setMenu(menuDummyData);
+  // }, []);  
 
-  // const fetchMenu = async () => {
-  //   const res = await fetch("http://localhost:8080/api/message");
-  //   const data = await res.json();
-  //   setMenu(data);
-  // };
+  const fetchMenu = async () => {
+    const res = await fetch("http://localhost:8080/api/message");
+    const data = await res.json();
+    setMenu(data);
+  };
 
   useEffect(() => {
     fetchMenu();
   }, []);
+
+  const applyOptimisticUpdate = (phone, quantity) => {
+    setMenu(prev =>
+      prev.map(item =>
+        item.phoneNumber === phone
+          ? { ...item, orderCount: item.orderCount + quantity }
+          : item
+      )
+    );
+  };
+
+  const rollbackUpdate = (phone, quantity) => {
+    setMenu((prev) =>
+      prev.map((item) =>
+        item.phoneNumber === phone
+          ? { ...item, orderCount: item.orderCount - quantity }
+          : item
+      )
+    );
+  };
 
   const updateOrderCount = (restaurantPhoneNumber, quantity) => {
     setMenu((prevMenu) =>
@@ -45,24 +65,40 @@ export function MenuPage() {
     setIsModalOpen(true);
   };
 
-  // const handleSubmitResponse = async (payload) => {
-  //   try {
-  //     await fetch("http://localhost:8080/api/response", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "X-USER-PHONE": localStorage.getItem("userPhone"),
-  //       },
-  //       body: JSON.stringify(payload),
-  //     });
-  //     updateOrderCount(payload.restaurantPhoneNumber, payload.quantity);
-  //     await fetchMenu(); // refresh real count from backend
-  //     setIsModalOpen(false);
-  //     setSelectedRestaurant(null);
-  //   } catch (err) {
-  //     alert(err.message || "Order limit reached");
-  //   }
-  // };
+  const handleSubmitResponse = async (payload) => {
+    if(submitting) return;
+    setSubmitting(true);  
+    applyOptimisticUpdate(
+     payload.restaurantPhoneNumber,
+     payload.quantity
+    );
+    try {
+      const res = await fetch("http://localhost:8080/api/response", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-USER-PHONE": localStorage.getItem("userPhone"),
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const message = await res.text();
+        throw new Error(message || "Order rejected");
+      }
+
+      await fetchMenu();
+      setIsModalOpen(false);
+      setSelectedRestaurant(null);
+    } catch (err) {
+          rollbackUpdate(
+            payload.restaurantPhoneNumber,
+            payload.quantity
+          );
+      alert(err.message || "Order limit reached");
+    } finally{
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="w-full">
@@ -74,14 +110,15 @@ export function MenuPage() {
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {menu.map((res) => (
-          <RestaurantCard
-            key={res.phoneNumber}
-            restaurant={res}
-            disabled={res.orderCount >= res.limit}
-            onSelect={() => handleSelect(res)}
-          />
-        ))}
+        {menu.map((res, index) => (
+        <RestaurantCard
+          key={`${res.phoneNumber}-${index}`}
+          restaurant={res}
+          disabled={res.orderCount >= res.limit}
+          onSelect={() => handleSelect(res)}
+      />
+))}
+
       </div>
 
       <ResponseModal
@@ -94,13 +131,15 @@ export function MenuPage() {
             ? selectedRestaurant.limit - selectedRestaurant.orderCount
             : 0
         }
+        
+        submitting={submitting}
         onClose={() => setIsModalOpen(false)}
-        // onSubmit={handleSubmitResponse}
-        onSubmit={(payload) => {
-          updateOrderCount(payload.restaurantPhoneNumber, payload.quantity);
-          setIsModalOpen(false);
-          setSelectedRestaurant(null);
-        }}
+        onSubmit={handleSubmitResponse}
+        // onSubmit={(payload) => {
+        //   updateOrderCount(payload.restaurantPhoneNumber, payload.quantity);
+        //   setIsModalOpen(false);
+        //   setSelectedRestaurant(null);
+        // }}
       />
     </div>
   );
