@@ -24,6 +24,7 @@ public class MenuService {
         List<MenuStore> mn=menuStoreRepository.findAll();
         List<MenuResponse> menuResponses=new ArrayList<>();
         for(MenuStore m:mn){
+
             MenuResponse menuResponse=new MenuResponse(
                     m.getPhone(),
                     m.getMenu(),

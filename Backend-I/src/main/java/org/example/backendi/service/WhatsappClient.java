@@ -51,7 +51,8 @@ class WhatsappClientApi {
             String userName,
             String userMobile,
             String address,
-            int count
+            int count,
+            int current
             ) {
 
         String url = "https://graph.facebook.com/v19.0/" + phoneId + "/messages";
@@ -63,6 +64,7 @@ class WhatsappClientApi {
                         "📞 Customer Phone: " + userMobile + "\n\n" +
                         "📍 Customer Address:\n" +
                         address+ "\n\n" +
+                        "💰 Total: " + current + "\n\n"+
                         "👥 No. of Customers: " + count
         );
 

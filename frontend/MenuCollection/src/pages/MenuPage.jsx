@@ -23,6 +23,14 @@ export function MenuPage() {
     fetchMenu();
   }, []);
 
+  useEffect(() => {
+  const interval = setInterval(() => {
+    fetchMenu();
+  }, 2000); 
+
+  return () => clearInterval(interval);
+  }, []);
+
   const applyOptimisticUpdate = (phone, quantity) => {
     setMenu(prev =>
       prev.map(item =>

@@ -34,11 +34,6 @@ public class RestaurantService {
 
     private final Map<String, Object> phoneLocks = new ConcurrentHashMap<>();
 
-    private void refreshSession(Menu_session session) {
-        session.setExpiresAt(Instant.now().plus(1, ChronoUnit.MINUTES));
-        menusessionRepo.save(session);
-    }
-
     private Object getPhoneLock(String phone) {
         return phoneLocks.computeIfAbsent(phone, k -> new Object());
     }
@@ -66,7 +61,7 @@ public class RestaurantService {
             if (menu_session != null &&
                     menu_session.getExpiresAt().isBefore(Instant.now())) {
                 menusessionRepo.delete(menu_session);
-                wap.sendText(phone, "⏳ Session expired. Please start again.");
+                wap.sendText(phone, "⏳ Session expired. Please start again and send 'RESET'");
                 return;
             }
 
@@ -87,7 +82,8 @@ public class RestaurantService {
                 case "WAITING_MENU":
                     menu_session.setMessage(text);
                     menu_session.setCurrent_status("WAITING_PRICE");
-                    refreshSession(menu_session);
+                    //refreshSession(menu_session);
+                    menusessionRepo.save(menu_session);
                     wap.sendText(phone, "💰 Please enter price");
                     break;
 
@@ -95,7 +91,8 @@ public class RestaurantService {
                     try {
                         menu_session.setPrice(Integer.parseInt(text));
                         menu_session.setCurrent_status("WAITING_LIMIT");
-                        refreshSession(menu_session);
+                        //refreshSession(menu_session);
+                        menusessionRepo.save(menu_session);
                         wap.sendText(phone, "⚠ Please enter order limit");
                     } catch (NumberFormatException e) {
                         wap.sendText(phone, "❌ Invalid price");
@@ -106,8 +103,9 @@ public class RestaurantService {
                     try {
                         menu_session.setLimit(Integer.parseInt(text));
                         menu_session.setCurrent_status("WAITING_TIME");
-                        refreshSession(menu_session);
-                        wap.sendText(phone, "⏰ Enter time (e.g. 05:30 PM)");
+                       // refreshSession(menu_session);
+                        menusessionRepo.save(menu_session);
+                        wap.sendText(phone, "⏰ Enter time (e.g. 05:30 PM  and 11:30 AM)");
                     } catch (NumberFormatException e) {
                         wap.sendText(phone, "❌ Invalid limit");
                     }
@@ -129,26 +127,38 @@ public class RestaurantService {
 //                        if (m < 0 || m > 59) throw new Exception();
 //                        if (!s4.equals("AM") && !s4.equals("PM")) throw new Exception();
 
+                        ZoneId zone = ZoneId.of("Asia/Kolkata");
+
                         LocalTime menuTime = LocalTime.parse(
                                 text.trim().toUpperCase(),
                                 DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
                         );
 
-                        LocalDate today = LocalDate.now(ZoneId.of("Asia/Kolkata"));
+                        LocalDate today = LocalDate.now(zone);
 
-                        menuExpiry = ZonedDateTime
-                                .of(today, menuTime, ZoneId.of("Asia/Kolkata"))
-                                .toInstant();
+                        // Try TODAY first
+                        ZonedDateTime expiryZdt = ZonedDateTime.of(today, menuTime, zone);
 
-                        if (menuExpiry.isBefore(Instant.now())) {
-                            menuExpiry = menuExpiry.plus(10, ChronoUnit.DAYS);
+                        // If time already passed today → assume TOMORROW
+                        if (expiryZdt.toInstant().isBefore(Instant.now())) {
+                            expiryZdt = expiryZdt.plusDays(1);
                         }
 
+                        // Final safety check (optional)
+                        if (expiryZdt.toInstant().isBefore(Instant.now())) {
+                            wap.sendText(
+                                    phone,
+                                    "❌ Invalid time. Please enter a valid serving time."
+                            );
+                            return;
+                        }
+
+                        menuExpiry = expiryZdt.toInstant();
                         menu_session.setTime(text);
                         //menu_session.setExpiresAtMenu(menuExpiry);
                         menu_session.setCurrent_status("COMPLETED");
-                        refreshSession(menu_session);
-
+                       // refreshSession(menu_session);
+                        menusessionRepo.save(menu_session);
                         MenuStore store = new MenuStore();
                         store.setMenu(menu_session.getMessage());
                         store.setPrice(menu_session.getPrice());
@@ -161,7 +171,6 @@ public class RestaurantService {
 
                         menuStoreRepository.save(store);
                         menusessionRepo.delete(menu_session);
-
                         wap.sendText(phone, "✅ Menu setup completed");
 
                     } catch (Exception e) {
@@ -173,7 +182,6 @@ public class RestaurantService {
                 case "COMPLETED":
                     wap.sendText(phone, "ℹ Menu already configured. Type RESET to reconfigure.");
                     break;
-
                 default:
                     wap.sendText(phone, "❓ Unknown state. Type RESET.");
             }

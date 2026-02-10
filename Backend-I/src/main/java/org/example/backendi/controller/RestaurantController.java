@@ -34,7 +34,6 @@ public class RestaurantController {
     @PostMapping
     public ResponseEntity<String> receiveMessage(@RequestBody String payload) {
 
-
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(payload);

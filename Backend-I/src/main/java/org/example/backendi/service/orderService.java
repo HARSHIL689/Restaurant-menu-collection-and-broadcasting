@@ -72,7 +72,8 @@ public class orderService {
                 user.getName(),
                 user.getPhone(),
                 request.address(),
-                newCount
+                newCount,
+                request.quantity()
         );
     }
 }
