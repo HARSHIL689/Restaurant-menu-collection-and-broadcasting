@@ -1,51 +1,71 @@
 export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
   const isLimitReached = restaurant.orderCount >= restaurant.limit;
+
   return (
-    <div 
+    <div
       onClick={!disabled && !isLimitReached ? onSelect : undefined}
       className={`
         w-full flex flex-col
-        bg-gradient-to-br from-white to-emerald-50
-        rounded-2xl p-6 transition-all duration-200
-        shadow-md hover:shadow-xl
-        border
-        ${isLimitReached || disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-        ${isSelected ? "border-green-600 ring-2 ring-green-500" : "border-emerald-200"}
+        bg-white
+        rounded-2xl p-6
+        transition-all duration-300
+        shadow-md hover:shadow-xl hover:scale-[1.02]
+        border border-orange-100
+        ${
+          isLimitReached || disabled
+            ? "opacity-60 cursor-not-allowed"
+            : "cursor-pointer"
+        }
+        ${
+          isSelected
+            ? "ring-2 ring-red-400 border-red-400"
+            : ""
+        }
       `}
     >
-      <h3 className="text-xl font-extrabold mb-3 text-green-700 tracking-wide">
+      {/* Restaurant Name */}
+      <h3 className="text-xl font-bold mb-3 text-gray-800 tracking-wide">
         {restaurant.restaurantName}
       </h3>
 
-      <pre className="whitespace-pre-wrap
-        text-gray-700 text-sm leading-relaxed
-         bg-white rounded-xl p-4 mb-4
-          border border-emerald-100
-          shadow-inner">
+      {/* Menu Description */}
+      <pre
+        className="
+          whitespace-pre-wrap
+          text-gray-600 text-sm leading-relaxed
+          bg-orange-50
+          rounded-xl p-4 mb-4
+          border border-orange-100
+        "
+      >
         {restaurant.message}
       </pre>
 
+      {/* Order Count */}
       <div className="flex justify-between items-center mb-3 text-sm">
         <span className="text-gray-700 font-medium">
           Orders: {restaurant.orderCount} / {restaurant.limit}
         </span>
 
         {isLimitReached && (
-          <span className="text-red-600 font-semibold text-xs">
+          <span className="text-red-500 font-semibold text-xs">
             Order limit reached
           </span>
         )}
       </div>
 
+      {/* Price + Created Date */}
       <div className="flex items-center justify-between mb-6">
-        <span className="bg-green-600 text-white px-4 py-1 rounded-full text-sm font-bold">
+        <span className="bg-red-500 text-white px-4 py-1 rounded-full text-sm font-bold shadow-sm">
           ₹ {restaurant.price}
         </span>
+
         <span className="text-xs text-gray-500">
           {new Date(restaurant.createdDate).toLocaleString()}
         </span>
       </div>
 
+      {/* Action Button */}
       <div className="mt-auto">
         <button
           type="button"
@@ -55,14 +75,13 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
             if (!isLimitReached && !disabled) onSelect();
           }}
           className={`
-            w-full py-2.5 rounded-xl text-sm font-bold transition-all
-            
+            w-full py-2.5 rounded-xl text-sm font-semibold transition-all duration-300
             ${
               isLimitReached
-                ? "bg-gray-400 text-white cursor-not-allowed"
+                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
                 : isSelected
-                ? "bg-green-600 text-white"
-                : "bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:opacity-90"
+                ? "bg-red-500 text-white"
+                : "bg-gradient-to-r from-red-500 to-amber-500 text-white hover:opacity-90"
             }
           `}
         >

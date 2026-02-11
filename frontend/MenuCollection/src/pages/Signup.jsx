@@ -13,44 +13,70 @@ function Signup() {
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const res = await fetch("http://localhost:8080/auth/signup", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(form),
+    const res = await fetch("http://localhost:8080/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
     });
 
     if (!res.ok) {
-        alert("Signup failed");
-        return;
+      alert("Signup failed");
+      return;
     }
 
     navigate("/login");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-50">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center text-green-700 mb-6">
-          Sign Up
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-amber-50 px-4">
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-xl border border-orange-100">
+
+        {/* Heading */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            🍽️ Create Account
+          </h2>
+          <p className="text-gray-500 text-sm">
+            Join and start ordering delicious meals
+          </p>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+
           <input
             name="name"
             placeholder="Full Name"
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-green-500"
+            className="
+              w-full px-4 py-2.5
+              border border-orange-200
+              rounded-xl
+              focus:outline-none
+              focus:ring-2 focus:ring-red-300
+              focus:border-red-400
+              transition
+            "
           />
 
           <input
             name="phone"
             placeholder="Phone Number"
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-green-500"
+            className="
+              w-full px-4 py-2.5
+              border border-orange-200
+              rounded-xl
+              focus:outline-none
+              focus:ring-2 focus:ring-red-300
+              focus:border-red-400
+              transition
+            "
           />
 
           <input
@@ -58,17 +84,41 @@ function Signup() {
             type="password"
             placeholder="Password"
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-green-500"
+            className="
+              w-full px-4 py-2.5
+              border border-orange-200
+              rounded-xl
+              focus:outline-none
+              focus:ring-2 focus:ring-red-300
+              focus:border-red-400
+              transition
+            "
           />
 
-          <button className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+          <button
+            type="submit"
+            className="
+              w-full
+              bg-gradient-to-r from-red-500 to-amber-500
+              text-white py-2.5
+              rounded-xl
+              font-semibold
+              shadow-sm
+              hover:opacity-90
+              transition
+            "
+          >
             Create Account
           </button>
         </form>
 
-        <p className="text-center text-sm mt-4">
+        {/* Login Link */}
+        <p className="text-center text-sm mt-6 text-gray-500">
           Already have an account?{" "}
-          <Link to="/login" className="text-green-600 font-semibold">
+          <Link
+            to="/login"
+            className="text-red-500 font-semibold hover:text-red-600 transition"
+          >
             Login
           </Link>
         </p>

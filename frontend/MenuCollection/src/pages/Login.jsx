@@ -9,51 +9,66 @@ function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const res = await fetch("http://localhost:8080/auth/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(form),
-  });
-
+    const res = await fetch("http://localhost:8080/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
 
     if (!res.ok) {
-        alert("Invalid Phone or Password !");
-        return;
+      alert("Invalid Phone or Password !");
+      return;
     }
-  const user = await res.json();
 
+    const user = await res.json();
 
-  // store login state
-  localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("userPhone", user.phone);
-  localStorage.setItem("name",user.name);
-  localStorage.setItem("role",user.role);
-  console.log(user.role);
-  if(user.role==="User"){
-    navigate("/dashboard");
-  }else {
-    navigate("/Admin-dashboard");
-  }
-};
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("userPhone", user.phone);
+    localStorage.setItem("name", user.name);
+    localStorage.setItem("role", user.role);
 
+    if (user.role === "User") {
+      navigate("/dashboard");
+    } else {
+      navigate("/Admin-dashboard");
+    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-50">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center text-green-700 mb-6">
-          Login
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-amber-50 px-4">
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-xl border border-orange-100">
+
+        {/* Heading */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            🍽️ Welcome Back
+          </h2>
+          <p className="text-gray-500 text-sm">
+            Login to continue ordering delicious meals
+          </p>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+
           <input
             type="text"
             name="phone"
             placeholder="Phone Number"
             value={form.phone}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="
+              w-full px-4 py-2.5
+              border border-orange-200
+              rounded-xl
+              focus:outline-none
+              focus:ring-2 focus:ring-red-300
+              focus:border-red-400
+              transition
+            "
           />
 
           <input
@@ -62,20 +77,41 @@ function Login() {
             placeholder="Password"
             value={form.password}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="
+              w-full px-4 py-2.5
+              border border-orange-200
+              rounded-xl
+              focus:outline-none
+              focus:ring-2 focus:ring-red-300
+              focus:border-red-400
+              transition
+            "
           />
 
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
+            className="
+              w-full
+              bg-gradient-to-r from-red-500 to-amber-500
+              text-white py-2.5
+              rounded-xl
+              font-semibold
+              shadow-sm
+              hover:opacity-90
+              transition
+            "
           >
             Login
           </button>
         </form>
 
-        <p className="text-center text-sm mt-4">
+        {/* Signup Link */}
+        <p className="text-center text-sm mt-6 text-gray-500">
           Don’t have an account?{" "}
-          <Link to="/signup" className="text-green-600 font-semibold">
+          <Link
+            to="/signup"
+            className="text-red-500 font-semibold hover:text-red-600 transition"
+          >
             Sign up
           </Link>
         </p>

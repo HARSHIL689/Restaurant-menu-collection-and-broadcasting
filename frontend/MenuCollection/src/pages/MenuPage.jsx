@@ -11,10 +11,6 @@ export function MenuPage() {
   const [submitting, setSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(null);
 
-  // const fetchMenu = (() => {
-  //   setMenu(menuDummyData);
-  // }, []);  
-
   const fetchMenu = async () => {
     const res = await fetch("http://localhost:8080/api/message");
     const data = await res.json();
@@ -26,11 +22,11 @@ export function MenuPage() {
   }, []);
 
   useEffect(() => {
-  const interval = setInterval(() => {
-    fetchMenu();
-  }, 4000); 
+    const interval = setInterval(() => {
+      fetchMenu();
+    }, 4000);
 
-  return () => clearInterval(interval);
+    return () => clearInterval(interval);
   }, []);
 
   const applyOptimisticUpdate = (phone, quantity) => {
@@ -44,8 +40,8 @@ export function MenuPage() {
   };
 
   const rollbackUpdate = (phone, quantity) => {
-    setMenu((prev) =>
-      prev.map((item) =>
+    setMenu(prev =>
+      prev.map(item =>
         item.phoneNumber === phone
           ? { ...item, orderCount: item.orderCount - quantity }
           : item
@@ -54,18 +50,15 @@ export function MenuPage() {
   };
 
   const updateOrderCount = (restaurantPhoneNumber, quantity) => {
-    setMenu((prevMenu) =>
-      prevMenu.map((item) =>
+    setMenu(prevMenu =>
+      prevMenu.map(item =>
         item.phoneNumber === restaurantPhoneNumber
-          ? {
-              ...item,
-              orderCount: item.orderCount + quantity,
-            }
+          ? { ...item, orderCount: item.orderCount + quantity }
           : item
       )
     );
   };
-  
+
   const handleSelect = (restaurant) => {
     if (restaurant.orderCount >= restaurant.limit) {
       alert("Order limit reached for this restaurant");
@@ -76,12 +69,14 @@ export function MenuPage() {
   };
 
   const handleSubmitResponse = async (payload) => {
-    if(submitting) return;
-    setSubmitting(true);  
+    if (submitting) return;
+    setSubmitting(true);
+
     applyOptimisticUpdate(
-     payload.restaurantPhoneNumber,
-     payload.quantity
+      payload.restaurantPhoneNumber,
+      payload.quantity
     );
+
     try {
       const res = await fetch("http://localhost:8080/api/response", {
         method: "POST",
@@ -91,102 +86,110 @@ export function MenuPage() {
         },
         body: JSON.stringify(payload),
       });
+
       if (!res.ok) {
         const message = await res.text();
         throw new Error(message || "Order rejected");
       }
+
       const data = await res.json();
       setOrderSuccess(data);
 
       await fetchMenu();
       setIsModalOpen(false);
       setSelectedRestaurant(null);
+
     } catch (err) {
-          rollbackUpdate(
-            payload.restaurantPhoneNumber,
-            payload.quantity
-          );
+      rollbackUpdate(
+        payload.restaurantPhoneNumber,
+        payload.quantity
+      );
       alert(err.message || "Order limit reached");
-    } finally{
+    } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
       <div className="max-w-6xl mx-auto px-6 py-10">
-      {orderSuccess && (
-        <div className="mb-6 p-4 bg-green-100 border border-green-300 rounded-lg shadow">
-          <h3 className="text-green-800 font-semibold mb-2">
-            ✅ Order Placed Successfully!
-          </h3>
 
-          <p className="text-sm text-gray-700">
-            <span className="font-medium">Restaurant:</span> {orderSuccess.restaurantName}
-          </p>
+        {/* Success Banner */}
+        {orderSuccess && (
+          <div className="mb-8 p-6 bg-white border border-amber-200 rounded-2xl shadow-md">
+            <h3 className="text-2xl font-bold text-amber-600 mb-4">
+              🍽️ Order Placed Successfully!
+            </h3>
 
-          <p className="text-sm text-gray-700">
-            <span className="font-medium">Quantity:</span> {orderSuccess.quantity}
-          </p>
+            <div className="grid sm:grid-cols-2 gap-4 text-gray-700">
+              <p>
+                <span className="font-semibold">Restaurant:</span>{" "}
+                {orderSuccess.restaurantName}
+              </p>
 
-          <p className="text-sm text-gray-700">
-            <span className="font-medium">Total Paid:</span> ₹{orderSuccess.totalAmount}
-          </p>
+              <p>
+                <span className="font-semibold">Quantity:</span>{" "}
+                {orderSuccess.quantity}
+              </p>
 
-          <p className="text-xs text-gray-500 mt-2">
-            Ordered at: {new Date(orderSuccess.orderedAt).toLocaleString()}
-          </p>
+              <p>
+                <span className="font-semibold">Total Paid:</span>{" "}
+                ₹{orderSuccess.totalAmount}
+              </p>
+
+              <p className="text-sm text-gray-500">
+                Ordered at:{" "}
+                {new Date(orderSuccess.orderedAt).toLocaleString()}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Back Button */}
+        <div className="mb-6">
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="text-sm text-red-500 hover:text-red-600 transition font-medium"
+          >
+            ← Back to Dashboard
+          </button>
         </div>
-      )}
 
-      <div className="mb-4">
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="text-sm text-green-700 hover:underline"
-        >
-          ← Back to Dashboard
-        </button>
-      </div>
+        {/* Page Heading */}
+        <h2 className="text-4xl font-bold text-gray-800 mb-3">
+          Today’s Menus
+        </h2>
+        <p className="text-gray-500 mb-10">
+          Discover delicious meals and reserve your plate.
+        </p>
 
-      <h2 className="text-3xl font-extrabold mb-2 text-green-700">
-        Today’s Menus
-      </h2>
-      <p className="text-gray-600 mb-8">
-        Choose a restaurant and confirm your visit
-      </p>
+        {/* Menu Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {menu.map((res, index) => (
+            <RestaurantCard
+              key={`${res.phoneNumber}-${index}`}
+              restaurant={res}
+              disabled={res.orderCount >= res.limit}
+              onSelect={() => handleSelect(res)}
+            />
+          ))}
+        </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {menu.map((res, index) => (
-        <RestaurantCard
-          key={`${res.phoneNumber}-${index}`}
-          restaurant={res}
-          disabled={res.orderCount >= res.limit}
-          onSelect={() => handleSelect(res)}
-      />
-))}
-
-      </div>
-
-      <ResponseModal
-        isOpen={isModalOpen}
-        RestaurantName={selectedRestaurant?.RestaurantName}
-        RestaurantPhoneNumber={selectedRestaurant?.phoneNumber}
-        price={selectedRestaurant?.price || 0}
-        remainingSlots={
-          selectedRestaurant
-            ? selectedRestaurant.limit - selectedRestaurant.orderCount
-            : 0
-        }
-        
-        submitting={submitting}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleSubmitResponse}
-        // onSubmit={(payload) => {
-        //   updateOrderCount(payload.restaurantPhoneNumber, payload.quantity);
-        //   setIsModalOpen(false);
-        //   setSelectedRestaurant(null);
-        // }}
-      />
+        {/* Modal */}
+        <ResponseModal
+          isOpen={isModalOpen}
+          RestaurantName={selectedRestaurant?.RestaurantName}
+          RestaurantPhoneNumber={selectedRestaurant?.phoneNumber}
+          price={selectedRestaurant?.price || 0}
+          remainingSlots={
+            selectedRestaurant
+              ? selectedRestaurant.limit - selectedRestaurant.orderCount
+              : 0
+          }
+          submitting={submitting}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleSubmitResponse}
+        />
       </div>
     </div>
   );

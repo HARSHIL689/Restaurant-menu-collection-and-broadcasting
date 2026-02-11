@@ -19,7 +19,13 @@ function Orders() {
       }
 
       const data = await res.json();
-      setOrders(data);
+
+      // Most recent first
+      const sortedOrders = [...data].sort(
+        (a, b) => new Date(b.orderedAt) - new Date(a.orderedAt)
+      );
+
+      setOrders(sortedOrders);
     } catch (err) {
       console.error(err);
       alert("Error loading orders");
@@ -32,52 +38,106 @@ function Orders() {
     fetchOrders();
   }, []);
 
+  const totalSpent = orders.reduce(
+    (sum, order) => sum + order.totalAmount,
+    0
+  );
+
   return (
-    <div className="min-h-screen bg-green-50 p-6">
-      <button
-        onClick={() => navigate("/dashboard")}
-        className="mb-4 text-sm text-green-700 hover:underline"
-      >
-        ← Back to Dashboard
-      </button>
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
+      <div className="max-w-6xl mx-auto px-6 py-12">
 
-      <h2 className="text-2xl font-semibold text-green-800 mb-6">
-        Your Past Orders
-      </h2>
+        {/* Back Button */}
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="mb-8 text-sm font-medium text-red-500 hover:text-red-600 transition"
+        >
+          ← Back to Dashboard
+        </button>
 
-      {loading && <p>Loading orders...</p>}
+        {/* Page Heading */}
+        <div className="mb-10">
+          <h2 className="text-4xl font-bold text-gray-800 mb-3">
+            Your Orders
+          </h2>
+          <p className="text-gray-500 text-lg">
+            Review your previous meals and spending history.
+          </p>
+        </div>
 
-      {!loading && orders.length === 0 && (
-        <p className="text-gray-500">No past orders found.</p>
-      )}
+        {/* Summary Section */}
+        {!loading && orders.length > 0 && (
+          <div className="bg-white border border-orange-100 rounded-2xl shadow-md p-6 mb-10">
+            <div className="grid sm:grid-cols-2 gap-6">
+              <div>
+                <p className="text-gray-500 text-sm">Total Orders</p>
+                <p className="text-2xl font-bold text-gray-800">
+                  {orders.length}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-500 text-sm">Total Spent</p>
+                <p className="text-2xl font-bold text-red-500">
+                  ₹ {totalSpent}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
-      <div className="space-y-4">
-        {orders.map((order, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow p-4"
-          >
-            <h3 className="font-semibold text-gray-800">
-              {order.restaurantName}
-            </h3>
+        {/* Loading State */}
+        {loading && (
+          <p className="text-gray-500">Loading your delicious history...</p>
+        )}
 
-            <p className="text-sm text-gray-600">
-              Quantity: {order.quantity}
-            </p>
-
-            <p className="text-sm text-gray-600">
-              Price per item: ₹{order.pricePerItem}
-            </p>
-
-            <p className="text-sm font-semibold text-gray-800">
-              Total Paid: ₹{order.totalAmount}
-            </p>
-
-            <p className="text-xs text-gray-500 mt-1">
-              Ordered at: {new Date(order.orderedAt).toLocaleString()}
+        {/* Empty State */}
+        {!loading && orders.length === 0 && (
+          <div className="bg-white rounded-2xl shadow-md p-8 text-center border border-orange-100">
+            <p className="text-gray-500 text-lg">
+              🍽️ You haven’t placed any orders yet.
             </p>
           </div>
-        ))}
+        )}
+
+        {/* Orders List */}
+        <div className="space-y-6">
+          {orders.map((order, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-2xl shadow-md border border-orange-100 p-6 hover:shadow-xl transition-all duration-300"
+            >
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
+                <h3 className="text-xl font-semibold text-gray-800">
+                  {order.restaurantName}
+                </h3>
+                <span className="text-sm text-gray-500">
+                  {new Date(order.orderedAt).toLocaleString()}
+                </span>
+              </div>
+
+              <div className="grid sm:grid-cols-3 gap-4 text-sm text-gray-600">
+                <p>
+                  <span className="font-medium text-gray-700">
+                    Quantity:
+                  </span>{" "}
+                  {order.quantity}
+                </p>
+
+                <p>
+                  <span className="font-medium text-gray-700">
+                    Price:
+                  </span>{" "}
+                  ₹ {order.pricePerItem}
+                </p>
+
+                <p className="font-semibold text-red-500">
+                  Total: ₹ {order.totalAmount}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   );
