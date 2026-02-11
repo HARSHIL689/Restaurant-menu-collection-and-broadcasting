@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class WhatsAppAutomationService {
 
     @Autowired
-    WhatsappClientApi wap;
+    WhatsappClient wap;
 
     @Autowired
     MenuStoreRepository menuStoreRepository;

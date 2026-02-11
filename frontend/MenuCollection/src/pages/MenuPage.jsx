@@ -28,7 +28,7 @@ export function MenuPage() {
   useEffect(() => {
   const interval = setInterval(() => {
     fetchMenu();
-  }, 2000); 
+  }, 4000); 
 
   return () => clearInterval(interval);
   }, []);

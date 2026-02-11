@@ -5,8 +5,12 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import MenuPage from "./pages/MenuPage";
 import MainLayout from "./layouts/MainLayout";
+<<<<<<< HEAD
 import Orders from "./pages/Orders"
 
+=======
+import AdminDashboard from "./pages/AdminDashboard";
+>>>>>>> b5a42b8 (admin added)
 const isLoggedIn = () =>
   localStorage.getItem("isLoggedIn") === "true";
 
@@ -25,6 +29,12 @@ function App() {
           element={isLoggedIn() ? <Dashboard /> : <Navigate to="/login" />}
           // element={<Dashboard />}
         />
+
+        <Route
+          path="/Admin-dashboard"
+          element={isLoggedIn() ? <AdminDashboard /> : <Navigate to="/login" />}
+        />
+
         <Route
           path="/menus"
           element={

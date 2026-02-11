@@ -1,3 +1,5 @@
+import {Link} from "react-router-dom"
+
 export default function MainLayout({ children }) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-lime-50 via-emerald-50 to-yellow-50 text-gray-900">
@@ -6,9 +8,11 @@ export default function MainLayout({ children }) {
             <h1 className="text-xl font-semibold">
               🍽️ Order Whatever You Like !!!
             </h1>
-            <span className="text-sm opacity-90">
-              Daily Menus
-            </span>
+           <div className="space-x-6">
+            <Link to="/dashboard" className="hover:underline">
+              Home
+            </Link>
+           </div>
           </div>
         </header>
 

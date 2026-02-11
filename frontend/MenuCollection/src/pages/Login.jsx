@@ -17,6 +17,7 @@ function Login() {
     body: JSON.stringify(form),
   });
 
+
     if (!res.ok) {
         alert("Invalid Phone or Password !");
         return;
@@ -28,7 +29,13 @@ function Login() {
   localStorage.setItem("isLoggedIn", "true");
   localStorage.setItem("userPhone", user.phone);
   localStorage.setItem("name",user.name);
-  navigate("/dashboard");
+  localStorage.setItem("role",user.role);
+  console.log(user.role);
+  if(user.role==="User"){
+    navigate("/dashboard");
+  }else {
+    navigate("/Admin-dashboard");
+  }
 };
 
 

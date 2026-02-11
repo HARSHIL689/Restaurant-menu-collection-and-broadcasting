@@ -24,7 +24,7 @@ public class orderService {
     private UserRepository userRepository;
 
     @Autowired
-    private WhatsappClientApi wap;
+    private WhatsappClient wap;
 
     @Autowired
     private MenuStoreRepository menuStoreRepository;

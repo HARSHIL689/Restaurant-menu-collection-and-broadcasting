@@ -2,6 +2,7 @@ package org.example.backendi.service;
 
 import org.example.backendi.model.User;
 import org.example.backendi.model.dto.LoginRequest;
+import org.example.backendi.model.dto.UserResponse;
 import org.example.backendi.model.dto.SignupRequest;
 import org.example.backendi.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +23,18 @@ public class AuthService {
         User user = new User();
         user.setName(request.name());
         user.setPhone(request.phone());
-
+        user.setRole("User");
         user.setPassword(request.password());
 
         userRepository.save(user);
     }
 
-    public User login(LoginRequest request) {
+    public UserResponse login(LoginRequest request) {
         User user = userRepository.findByPhone(request.phone());
         if (user == null || !user.getPassword().equals(request.password())) {
             throw new RuntimeException("Invalid phone or password");
         }
-        return user;
+        UserResponse userResponse=new UserResponse(user.getName(),user.getPhone(),user.getRole());
+        return userResponse;
     }
 }

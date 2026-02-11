@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-class WhatsappClientApi {
+class WhatsappClient {
 
     @Value("${whatsapp.token}")
     private String token;

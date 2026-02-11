@@ -27,7 +27,7 @@ public class RestaurantService {
     private MenuStoreRepository menuStoreRepository;
 
     @Autowired
-    private WhatsappClientApi wap;
+    private WhatsappClient wap;
 
     @Autowired
     private MenusessionRepo menusessionRepo;
