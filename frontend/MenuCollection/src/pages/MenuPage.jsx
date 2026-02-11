@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import RestaurantCard from "../components/RestaurantCard";
 import ResponseModal from "../components/ResponseModal";
 
-
 export function MenuPage() {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [menu, setMenu] = useState([]);
   const [submitting, setSubmitting] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState(null);
 
   // const fetchMenu = (() => {
   //   setMenu(menuDummyData);
@@ -93,6 +95,8 @@ export function MenuPage() {
         const message = await res.text();
         throw new Error(message || "Order rejected");
       }
+      const data = await res.json();
+      setOrderSuccess(data);
 
       await fetchMenu();
       setIsModalOpen(false);
@@ -109,11 +113,45 @@ export function MenuPage() {
   };
 
   return (
-    <div className="w-full">
-      <h2 className="text-3xl font-extrabold mb-1 text-green-700">
+    <div className="min-h-screen bg-green-50">
+      <div className="max-w-6xl mx-auto px-6 py-10">
+      {orderSuccess && (
+        <div className="mb-6 p-4 bg-green-100 border border-green-300 rounded-lg shadow">
+          <h3 className="text-green-800 font-semibold mb-2">
+            ✅ Order Placed Successfully!
+          </h3>
+
+          <p className="text-sm text-gray-700">
+            <span className="font-medium">Restaurant:</span> {orderSuccess.restaurantName}
+          </p>
+
+          <p className="text-sm text-gray-700">
+            <span className="font-medium">Quantity:</span> {orderSuccess.quantity}
+          </p>
+
+          <p className="text-sm text-gray-700">
+            <span className="font-medium">Total Paid:</span> ₹{orderSuccess.totalAmount}
+          </p>
+
+          <p className="text-xs text-gray-500 mt-2">
+            Ordered at: {new Date(orderSuccess.orderedAt).toLocaleString()}
+          </p>
+        </div>
+      )}
+
+      <div className="mb-4">
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="text-sm text-green-700 hover:underline"
+        >
+          ← Back to Dashboard
+        </button>
+      </div>
+
+      <h2 className="text-3xl font-extrabold mb-2 text-green-700">
         Today’s Menus
       </h2>
-      <p className="text-gray-600 mb-6">
+      <p className="text-gray-600 mb-8">
         Choose a restaurant and confirm your visit
       </p>
 
@@ -149,6 +187,7 @@ export function MenuPage() {
         //   setSelectedRestaurant(null);
         // }}
       />
+      </div>
     </div>
   );
 }

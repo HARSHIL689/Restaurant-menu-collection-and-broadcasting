@@ -2,9 +2,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Dashboard from "./pages/DashBoard";
+import Dashboard from "./pages/Dashboard";
 import MenuPage from "./pages/MenuPage";
 import MainLayout from "./layouts/MainLayout";
+import Orders from "./pages/Orders"
 
 const isLoggedIn = () =>
   localStorage.getItem("isLoggedIn") === "true";
@@ -22,6 +23,7 @@ function App() {
         <Route
           path="/dashboard"
           element={isLoggedIn() ? <Dashboard /> : <Navigate to="/login" />}
+          // element={<Dashboard />}
         />
         <Route
           path="/menus"
@@ -29,6 +31,14 @@ function App() {
               <MainLayout>
                 <MenuPage />
               </MainLayout>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <MainLayout>
+              <Orders />
+            </MainLayout>
           }
         />
       </Routes>

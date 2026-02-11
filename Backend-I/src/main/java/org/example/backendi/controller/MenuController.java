@@ -2,6 +2,7 @@ package org.example.backendi.controller;
 
 import org.example.backendi.model.dto.MenuResponse;
 import org.example.backendi.model.dto.orderRequest;
+import org.example.backendi.model.dto.OrderResponse;
 import org.example.backendi.service.MenuService;
 import org.example.backendi.service.orderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,9 @@ public class MenuController {
         }
 
         try {
-            orderService.fetchorder(request, userPhone);
-            return ResponseEntity.ok().build();
+            OrderResponse response =
+                    orderService.fetchorder(request, userPhone);
+            return ResponseEntity.ok(response);
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity
@@ -53,4 +55,26 @@ public class MenuController {
                     .body(e.getMessage());
         }
     }
+    @GetMapping("api/orders")
+    public ResponseEntity<?> getOrders(
+            @RequestHeader(value = "X-USER-PHONE", required = false) String userPhone
+    ) {
+
+        if (userPhone == null || userPhone.isBlank()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Missing X-USER-PHONE header");
+        }
+
+        try {
+            return ResponseEntity.ok(
+                    orderService.getOrdersByUser(userPhone)
+            );
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        }
+    }
+
 }
