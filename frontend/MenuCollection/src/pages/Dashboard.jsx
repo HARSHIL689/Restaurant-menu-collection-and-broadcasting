@@ -7,19 +7,31 @@ function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
 
-      {/* Top Bar */}
-      <header className="bg-white/90 backdrop-blur border-b border-orange-100 shadow-sm">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-lg font-semibold text-gray-800">
+      {/* Header */}
+      <header className="bg-white shadow-md border-b border-orange-100">
+        <div className="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
+
+          {/* Welcome */}
+          <h1 className="text-xl font-semibold text-gray-800">
             🍽️ Welcome, {studentName}
           </h1>
 
+          {/* Logout Button */}
           <button
             onClick={() => {
               localStorage.removeItem("isLoggedIn");
               navigate("/login");
             }}
-            className="text-sm font-medium text-red-500 hover:text-red-600 transition"
+            className="
+              px-5 py-2.5
+              rounded-xl
+              text-sm font-semibold
+              bg-red-500
+              text-white
+              hover:bg-red-600
+              transition-all duration-200
+              shadow-sm
+            "
           >
             Logout
           </button>

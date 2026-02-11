@@ -23,13 +23,14 @@ function App() {
 
         <Route
           path="/dashboard"
-          // element={isLoggedIn() ? <Dashboard /> : <Navigate to="/login" />}
-           element={<Dashboard />}
+          element={isLoggedIn() ? <Dashboard /> : <Navigate to="/login" />}
+          // element={<Dashboard />}
         />
 
         <Route
           path="/Admin-dashboard"
           element={isLoggedIn() ? <AdminDashboard /> : <Navigate to="/login" />}
+          //element={<AdminDashboard />}
         />
 
         <Route

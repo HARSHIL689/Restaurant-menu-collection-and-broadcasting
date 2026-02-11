@@ -9,18 +9,30 @@ function AdminDashboard() {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
 
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur border-b border-orange-100 shadow-sm">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-lg font-semibold text-gray-800">
+      <header className="bg-white shadow-md border-b border-orange-100">
+        <div className="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
+
+          {/* Admin Title */}
+          <h1 className="text-xl font-semibold text-gray-800">
             🛠️ Admin Panel – {studentName}
           </h1>
 
+          {/* Logout Button */}
           <button
             onClick={() => {
               localStorage.removeItem("isLoggedIn");
               navigate("/login");
             }}
-            className="text-sm font-medium text-red-500 hover:text-red-600 transition"
+            className="
+              px-5 py-2.5
+              rounded-xl
+              text-sm font-semibold
+              bg-red-500
+              text-white
+              hover:bg-red-600
+              transition-all duration-200
+              shadow-sm
+            "
           >
             Logout
           </button>
@@ -61,7 +73,7 @@ function AdminDashboard() {
             </button>
           </section>
 
-          {/* Placeholder for Future Admin Features */}
+          {/* Placeholder */}
           <section className="bg-white rounded-2xl shadow-md p-8 border border-orange-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
             <h3 className="text-xl font-semibold text-gray-800 mb-3">
               Upcoming Features
@@ -73,7 +85,7 @@ function AdminDashboard() {
 
             <button
               disabled
-              className="bg-gray-300 text-gray-600 px-6 py-2.5 rounded-xl font-semibold cursor-not-allowed"
+              className="px-6 py-2.5 rounded-xl font-semibold bg-gray-300 text-gray-600 cursor-not-allowed"
             >
               Coming Soon
             </button>

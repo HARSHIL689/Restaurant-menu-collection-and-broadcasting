@@ -145,16 +145,6 @@ export function MenuPage() {
           </div>
         )}
 
-        {/* Back Button */}
-        <div className="mb-6">
-          <button
-            onClick={() => navigate("/dashboard")}
-            className="text-sm text-red-500 hover:text-red-600 transition font-medium"
-          >
-            ← Back to Dashboard
-          </button>
-        </div>
-
         {/* Page Heading */}
         <h2 className="text-4xl font-bold text-gray-800 mb-3">
           Today’s Menus
