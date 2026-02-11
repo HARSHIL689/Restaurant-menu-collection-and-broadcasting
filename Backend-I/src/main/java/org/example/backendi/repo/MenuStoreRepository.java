@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 public interface MenuStoreRepository extends JpaRepository<MenuStore,Long> {
@@ -19,4 +21,11 @@ public interface MenuStoreRepository extends JpaRepository<MenuStore,Long> {
     @Query("SELECT m FROM MenuStore m WHERE m.phone = :phone")
     Optional<MenuStore> findForUpdate(@Param("phone") String phone);
     Optional<MenuStore> findByPhone(String phone);
+    @Query("""
+    SELECT m FROM MenuStore m
+    WHERE m.expiresAt > CURRENT_TIMESTAMP
+    AND m.OrerCount < m.limit
+    """)
+    List<MenuStore> findActiveMenus();
+
 }

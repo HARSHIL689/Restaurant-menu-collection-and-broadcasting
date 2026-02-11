@@ -21,11 +21,12 @@ public class MenuService {
     }
 
     public List<MenuResponse> getmenu() {
-        List<MenuStore> mn=menuStoreRepository.findAll();
-        List<MenuResponse> menuResponses=new ArrayList<>();
-        for(MenuStore m:mn){
 
-            MenuResponse menuResponse=new MenuResponse(
+        List<MenuStore> mn = menuStoreRepository.findActiveMenus();
+        List<MenuResponse> menuResponses = new ArrayList<>();
+
+        for (MenuStore m : mn) {
+            MenuResponse menuResponse = new MenuResponse(
                     m.getPhone(),
                     m.getMenu(),
                     m.getPrice(),
@@ -38,5 +39,4 @@ public class MenuService {
         }
         return menuResponses;
     }
-
 }
