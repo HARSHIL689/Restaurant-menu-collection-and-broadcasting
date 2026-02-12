@@ -6,8 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import MenuPage from "./pages/MenuPage";
 import MainLayout from "./layouts/MainLayout";
 import Orders from "./pages/Orders"
-import AdminDashboard from "./pages/AdminDashboard";
-
+import AdminDashboard from "./pages/AdminDashboard"
 const isLoggedIn = () =>
   localStorage.getItem("isLoggedIn") === "true";
 
@@ -23,8 +22,8 @@ function App() {
 
         <Route
           path="/dashboard"
-          // element={isLoggedIn() ? <Dashboard /> : <Navigate to="/login" />}
-           element={<Dashboard />}
+           element={isLoggedIn() ? <Dashboard /> : <Navigate to="/login" />}
+           //element={<Dashboard />}
         />
 
         <Route
@@ -40,6 +39,7 @@ function App() {
               </MainLayout>
           }
         />
+
         <Route
           path="/orders"
           element={
@@ -48,6 +48,7 @@ function App() {
             </MainLayout>
           }
         />
+
       </Routes>
     </BrowserRouter>
   );
