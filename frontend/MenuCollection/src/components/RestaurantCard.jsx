@@ -25,7 +25,7 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
     >
       {/* Restaurant Name */}
       <h3 className="text-xl font-bold mb-3 text-gray-800 tracking-wide">
-        {restaurant.restaurantName}
+        {restaurant.RestaurantName}
       </h3>
 
       {/* Menu Description */}

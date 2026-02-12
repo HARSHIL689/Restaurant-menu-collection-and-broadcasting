@@ -30,6 +30,7 @@ public class MenuService {
                     m.getPhone(),
                     m.getMenu(),
                     m.getPrice(),
+                    m.getId(),
                     m.getCreatedDate(),
                     m.getRestaurant().getRestaurantName(),
                     m.getLimit(),

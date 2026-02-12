@@ -15,6 +15,7 @@ export function MenuPage() {
     const res = await fetch("http://localhost:8080/api/message");
     const data = await res.json();
     setMenu(data);
+    console.log(data);
   };
 
   useEffect(() => {
@@ -29,25 +30,26 @@ export function MenuPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const applyOptimisticUpdate = (phone, quantity) => {
+  const applyOptimisticUpdate = (menuId, quantity) => {
     setMenu(prev =>
       prev.map(item =>
-        item.phoneNumber === phone
+        item.menuId === menuId
           ? { ...item, orderCount: item.orderCount + quantity }
           : item
       )
     );
   };
 
-  const rollbackUpdate = (phone, quantity) => {
-    setMenu(prev =>
-      prev.map(item =>
-        item.phoneNumber === phone
-          ? { ...item, orderCount: item.orderCount - quantity }
-          : item
-      )
-    );
-  };
+  const rollbackUpdate = (menuId, quantity) => {
+  setMenu(prev =>
+    prev.map(item =>
+      item.menuId === menuId
+        ? { ...item, orderCount: item.orderCount - quantity }
+        : item
+    )
+  );
+};
+
 
   const updateOrderCount = (restaurantPhoneNumber, quantity) => {
     setMenu(prevMenu =>
@@ -71,11 +73,13 @@ export function MenuPage() {
   const handleSubmitResponse = async (payload) => {
     if (submitting) return;
     setSubmitting(true);
-
+    
     applyOptimisticUpdate(
-      payload.restaurantPhoneNumber,
+      selectedRestaurant.menuId,
       payload.quantity
     );
+
+
 
     try {
       const res = await fetch("http://localhost:8080/api/response", {
@@ -101,9 +105,10 @@ export function MenuPage() {
 
     } catch (err) {
       rollbackUpdate(
-        payload.restaurantPhoneNumber,
+        selectedRestaurant.menuId,
         payload.quantity
       );
+
       alert(err.message || "Order limit reached");
     } finally {
       setSubmitting(false);
@@ -168,14 +173,17 @@ export function MenuPage() {
         {/* Modal */}
         <ResponseModal
           isOpen={isModalOpen}
-          RestaurantName={selectedRestaurant?.RestaurantName}
-          RestaurantPhoneNumber={selectedRestaurant?.phoneNumber}
+          menuId={selectedRestaurant?.menuId}
+          restaurantName={selectedRestaurant?.RestaurantName}
           price={selectedRestaurant?.price || 0}
+
           remainingSlots={
             selectedRestaurant
               ? selectedRestaurant.limit - selectedRestaurant.orderCount
               : 0
           }
+
+          
           submitting={submitting}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleSubmitResponse}

@@ -73,19 +73,17 @@ function AdminDashboard() {
             </button>
           </section>
 
-          {/* Placeholder */}
           <section className="bg-white rounded-2xl shadow-md p-8 border border-orange-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
             <h3 className="text-xl font-semibold text-gray-800 mb-3">
               Upcoming Features
             </h3>
-
             <p className="text-gray-500 mb-8">
               Order analytics, restaurant management, and more.
             </p>
 
             <button
-              disabled
-              className="px-6 py-2.5 rounded-xl font-semibold bg-gray-300 text-gray-600 cursor-not-allowed"
+              className="bg-gradient-to-r from-red-500 to-amber-500 text-white px-6 py-2.5 rounded-xl font-semibold shadow-sm hover:opacity-90 transition"
+              onClick={()=>navigate('/admin')}
             >
               Coming Soon
             </button>

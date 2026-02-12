@@ -41,8 +41,9 @@ public class orderService {
             throw new IllegalArgumentException("User not found");
         }
 
+        System.out.println(request.menuId());
         MenuStore menuStore = menuStoreRepository
-                .findForUpdate(request.restaurantPhoneNumber())
+                .findById(request.menuId())
                 .orElseThrow(() -> new IllegalArgumentException("Menu not found"));
 
         int currentCount = menuStore.getOrerCount();

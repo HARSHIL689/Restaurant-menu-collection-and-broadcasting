@@ -33,6 +33,7 @@ public class MenuController {
             @RequestHeader(value = "X-USER-PHONE", required = false) String userPhone
     ) {
 
+        System.out.print(userPhone);
         if (userPhone == null || userPhone.isBlank()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
@@ -40,10 +41,8 @@ public class MenuController {
         }
 
         try {
-            OrderResponse response =
-                    orderService.fetchorder(request, userPhone);
+            OrderResponse response =orderService.fetchorder(request, userPhone);
             return ResponseEntity.ok(response);
-
         } catch (IllegalArgumentException e) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
