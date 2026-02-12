@@ -47,14 +47,6 @@ function Orders() {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
       <div className="max-w-6xl mx-auto px-6 py-12">
 
-        {/* Back Button */}
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="mb-8 text-sm font-medium text-red-500 hover:text-red-600 transition"
-        >
-          ← Back to Dashboard
-        </button>
-
         {/* Page Heading */}
         <div className="mb-10">
           <h2 className="text-4xl font-bold text-gray-800 mb-3">
