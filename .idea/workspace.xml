@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bb146c9f-edbd-4467-a926-8a00eec8cbde" name="Changes" comment="" />
+    <list default="true" id="bb146c9f-edbd-4467-a926-8a00eec8cbde" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/MenuCollection/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/MenuCollection/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/MenuCollection/src/pages/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/MenuCollection/src/pages/Login.jsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,6 +38,19 @@
     &quot;last_opened_file_path&quot;: &quot;D:/Program Files/Restaurant-menu-collection-and-broadcasting-main&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Restaurant-menu-collection-and-broadcasting-main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Restaurant-menu-collection-and-broadcasting-main" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="bb146c9f-edbd-4467-a926-8a00eec8cbde" name="Changes" comment="" />
