@@ -5,9 +5,11 @@ function Dashboard() {
   const studentName = localStorage.getItem("name");
 
    const handleLogout = () => {
-    localStorage.clear(); 
-    navigate("/login", { replace: true });
-  };
+  localStorage.clear();
+  navigate("/login", { replace: true });
+};
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">

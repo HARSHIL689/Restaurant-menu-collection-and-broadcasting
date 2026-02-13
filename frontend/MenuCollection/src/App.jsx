@@ -4,21 +4,18 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import MenuPage from "./pages/MenuPage";
-import MainLayout from "./layouts/MainLayout";
 import Orders from "./pages/Orders";
 import AdminDashboard from "./pages/AdminDashboard";
 import Admin from "./pages/Admin";
-
-const isLoggedIn = () =>
-  localStorage.getItem("isLoggedIn") === "true";
+import MainLayout from "./layouts/MainLayout";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        <Route path="/" element={<Navigate to="/login" />} />
-
+        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
@@ -26,32 +23,29 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            isLoggedIn() &&
-            localStorage.getItem("role") === "User"
-              ? <Dashboard />
-              : <Navigate to="/login" />
+            <ProtectedRoute allowedRole="User">
+              <Dashboard />
+            </ProtectedRoute>
           }
         />
 
-        {/* Admin Main Analytics Page */}
-        <Route
-          path="/admin"
-          element={
-            isLoggedIn() &&
-            localStorage.getItem("role") !== "User"
-              ? <Admin />
-              : <Navigate to="/login" />
-          }
-        />
-
-        {/* Admin Panel */}
+        {/* Admin Dashboard */}
         <Route
           path="/Admin-dashboard"
           element={
-            isLoggedIn() &&
-            localStorage.getItem("role") !== "User"
-              ? <AdminDashboard />
-              : <Navigate to="/login" />
+            <ProtectedRoute allowedRole="Admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin Analytics Page */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRole="Admin">
+              <Admin />
+            </ProtectedRoute>
           }
         />
 
@@ -59,28 +53,27 @@ function App() {
         <Route
           path="/menus"
           element={
-            isLoggedIn()
-              ? (
-                <MainLayout>
-                  <MenuPage />
-                </MainLayout>
-              )
-              : <Navigate to="/login" />
+            <ProtectedRoute>
+              <MainLayout>
+                <MenuPage />
+              </MainLayout>
+            </ProtectedRoute>
           }
         />
 
         <Route
           path="/orders"
           element={
-            isLoggedIn()
-              ? (
-                <MainLayout>
-                  <Orders />
-                </MainLayout>
-              )
-              : <Navigate to="/login" />
+            <ProtectedRoute>
+              <MainLayout>
+                <Orders />
+              </MainLayout>
+            </ProtectedRoute>
           }
         />
+
+        {/* Unknown URL */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
 
       </Routes>
     </BrowserRouter>

@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
+
   const [form, setForm] = useState({
     phone: "",
     password: ""
@@ -26,28 +27,26 @@ function Login() {
       });
 
       if (!res.ok) {
-        alert("Invalid Phone or Password!");
+        alert("Invalid credentials");
         return;
       }
 
       const user = await res.json();
 
-      // ✅ Store Login Info
       localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userPhone", user.phone);
-      localStorage.setItem("name", user.name);
       localStorage.setItem("role", user.role);
+      localStorage.setItem("name", user.name);
+      localStorage.setItem("userPhone", user.phone);
 
-      // ✅ Navigate Based On Role
       if (user.role === "User") {
-        navigate("/dashboard");
-      } else {
-        navigate("/Admin-dashboard");
+        navigate("/dashboard", { replace: true });
+      } else if (user.role === "Admin") {
+        navigate("/Admin-dashboard", { replace: true });
       }
 
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("Server error. Try again.");
+    } catch (err) {
+      console.error(err);
+      alert("Server error");
     }
   };
 
