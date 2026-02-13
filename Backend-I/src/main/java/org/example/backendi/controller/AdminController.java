@@ -1,11 +1,14 @@
 package org.example.backendi.controller;
 
 import org.example.backendi.model.Restaurant;
+import org.example.backendi.model.dto.AdminResponse;
 import org.example.backendi.model.dto.RestaurantRequest;
 import org.example.backendi.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
@@ -18,5 +21,10 @@ public class AdminController {
     @PostMapping("/addRestaurant")
     public ResponseEntity<?> addRestaurantController(@RequestBody RestaurantRequest restaurantRequest) {
         return adminService.addRestaurant(restaurantRequest);
+    }
+
+    @GetMapping("/getRestaurant")
+    public List<AdminResponse> getAllRestaurantController() {
+        return adminService.getRestaurant();
     }
 }

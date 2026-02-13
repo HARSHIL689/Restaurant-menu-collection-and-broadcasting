@@ -1,19 +1,69 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 function Admin() {
-  // Static demo data (no backend)
-  const restaurants = [
-    { name: "Dankawala", orders: 120, revenue: 14400 },
-    { name: "Food Plaza", orders: 85, revenue: 10200 },
-    { name: "Spice Hub", orders: 60, revenue: 7200 },
-  ];
+  const [restaurants, setRestaurants] = useState([]);
+    const [showModal, setShowModal] = useState(false);
 
-  const totalOrders = restaurants.reduce((sum, r) => sum + r.orders, 0);
-  const totalRevenue = restaurants.reduce((sum, r) => sum + r.revenue, 0);
+  const [formData, setFormData] = useState({
+    name: "",
+    Phone: "",
+    RestaurantName: ""
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const fetchRestaurant = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/admin/getRestaurant");
+      const data = await res.json();
+      setRestaurants(data);
+    } catch (error) {
+      console.error("Error fetching restaurants:", error);
+    }
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    await fetch("http://localhost:8080/admin/addRestaurant", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
+
+    setShowModal(false);
+    setFormData({ name: "", Phone: "", RestaurantName: "" });
+    fetchRestaurant(); // refresh list
+  };
+
+  useEffect(() => {
+    fetchRestaurant();
+
+    const interval = setInterval(() => {
+      fetchRestaurant();
+    }, 4000);
+
+    return () => clearInterval(interval); // cleanup
+  }, []);
+
+  const totalOrders = restaurants.reduce(
+    (sum, r) => sum + r.totalOrderCount,
+    0
+  );
+
+  const totalRevenue = restaurants.reduce(
+    (sum, r) => sum + r.totalPrice,
+    0
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-orange-50 p-8">
-
       {/* Header */}
       <div className="mb-10">
         <h1 className="text-4xl font-bold text-gray-800">
@@ -24,7 +74,7 @@ function Admin() {
         </p>
       </div>
 
-      {/* Top Summary Cards */}
+      {/* Summary Cards */}
       <div className="grid md:grid-cols-3 gap-6 mb-12">
 
         <div className="bg-white p-6 rounded-2xl shadow-md border border-orange-100">
@@ -35,7 +85,9 @@ function Admin() {
         </div>
 
         <div className="bg-white p-6 rounded-2xl shadow-md border border-orange-100">
-          <h3 className="text-sm text-gray-500 mb-2">Total Orders (This Month)</h3>
+          <h3 className="text-sm text-gray-500 mb-2">
+            Total Orders (This Month)
+          </h3>
           <p className="text-3xl font-bold text-gray-800">
             {totalOrders}
           </p>
@@ -47,10 +99,9 @@ function Admin() {
             ₹ {totalRevenue}
           </p>
         </div>
-
       </div>
 
-      {/* Restaurant Analytics Table */}
+      {/* Table */}
       <div className="bg-white rounded-2xl shadow-md border border-orange-100 overflow-hidden">
 
         <div className="p-6 border-b border-gray-100">
@@ -80,18 +131,22 @@ function Admin() {
                 </td>
 
                 <td className="px-6 py-4 text-gray-700">
-                  {r.orders}
+                  {r.totalOrderCount}
                 </td>
 
                 <td className="px-6 py-4 text-red-500 font-semibold">
-                  ₹ {r.revenue}
+                  ₹ {r.totalPrice}
                 </td>
 
                 <td className="px-6 py-4">
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
                       className="bg-gradient-to-r from-red-500 to-amber-500 h-2 rounded-full"
-                      style={{ width: `${(r.orders / totalOrders) * 100}%` }}
+                      style={{
+                        width: totalOrders
+                          ? `${(r.totalOrderCount / totalOrders) * 100}%`
+                          : "0%"
+                      }}
                     />
                   </div>
                 </td>
@@ -99,15 +154,76 @@ function Admin() {
             ))}
           </tbody>
         </table>
-
       </div>
 
-      {/* Add Restaurant Button */}
       <div className="mt-12 text-right">
-        <button className="bg-gradient-to-r from-red-500 to-amber-500 text-white px-6 py-3 rounded-xl font-semibold shadow hover:opacity-90 transition">
+        <button
+        onClick={()=>setShowModal(true)} 
+        className="bg-gradient-to-r from-red-500 to-amber-500 text-white px-6 py-3 rounded-xl font-semibold shadow hover:opacity-90 transition">
           ➕ Add New Restaurant
         </button>
       </div>
+      
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
+
+          <div className="bg-white p-8 rounded-2xl w-96 shadow-lg">
+
+            <h2 className="text-xl font-bold mb-6">Add Restaurant</h2>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                type="text"
+                name="RestaurantName"
+                placeholder="Restaurant Name"
+                value={formData.RestaurantName}
+                onChange={handleChange}
+                className="w-full border p-3 rounded-lg"
+                required
+              />
+
+              <input
+                type="text"
+                name="name"
+                placeholder="Owner Name"
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full border p-3 rounded-lg"
+                required
+              />
+
+              <input
+                type="text"
+                name="Phone"
+                placeholder="Phone Number"
+                value={formData.Phone}
+                onChange={handleChange}
+                className="w-full border p-3 rounded-lg"
+                required
+              />
+
+              <div className="flex justify-between mt-6">
+
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="px-4 py-2 bg-gray-200 rounded-lg"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-gradient-to-r from-red-500 to-amber-500 text-white rounded-lg"
+                >
+                  Save
+                </button>
+
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );

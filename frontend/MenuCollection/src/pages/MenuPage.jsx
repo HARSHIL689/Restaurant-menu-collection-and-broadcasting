@@ -79,8 +79,6 @@ export function MenuPage() {
       payload.quantity
     );
 
-
-
     try {
       const res = await fetch("http://localhost:8080/api/response", {
         method: "POST",

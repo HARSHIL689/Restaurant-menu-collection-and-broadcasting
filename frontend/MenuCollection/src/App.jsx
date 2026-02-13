@@ -5,9 +5,10 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import MenuPage from "./pages/MenuPage";
 import MainLayout from "./layouts/MainLayout";
-import Orders from "./pages/Orders"
-import AdminDashboard from "./pages/AdminDashboard"
-import Admin from  './pages/Admin'
+import Orders from "./pages/Orders";
+import AdminDashboard from "./pages/AdminDashboard";
+import Admin from "./pages/Admin";
+
 const isLoggedIn = () =>
   localStorage.getItem("isLoggedIn") === "true";
 
@@ -21,36 +22,63 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
+        {/* User Dashboard */}
         <Route
           path="/dashboard"
-           element={isLoggedIn() ? <Dashboard /> : <Navigate to="/login" />}
+          element={
+            isLoggedIn() &&
+            localStorage.getItem("role") === "User"
+              ? <Dashboard />
+              : <Navigate to="/login" />
+          }
         />
 
+        {/* Admin Main Analytics Page */}
         <Route
           path="/admin"
-          element={isLoggedIn()? <Admin/> : <Navigate to="/login"/>}
+          element={
+            isLoggedIn() &&
+            localStorage.getItem("role") !== "User"
+              ? <Admin />
+              : <Navigate to="/login" />
+          }
         />
 
+        {/* Admin Panel */}
         <Route
           path="/Admin-dashboard"
-          element={isLoggedIn() ? <AdminDashboard /> : <Navigate to="/login" />}
+          element={
+            isLoggedIn() &&
+            localStorage.getItem("role") !== "User"
+              ? <AdminDashboard />
+              : <Navigate to="/login" />
+          }
         />
 
+        {/* Shared Layout Pages */}
         <Route
           path="/menus"
-          element={ isLoggedIn()?
-              <MainLayout>
-                <MenuPage />
-              </MainLayout>:<Navigate to="/login"/>
+          element={
+            isLoggedIn()
+              ? (
+                <MainLayout>
+                  <MenuPage />
+                </MainLayout>
+              )
+              : <Navigate to="/login" />
           }
         />
 
         <Route
           path="/orders"
-          element={isLoggedIn()?
-            <MainLayout>
-              <Orders />
-            </MainLayout>:<Navigate to="/login"/>
+          element={
+            isLoggedIn()
+              ? (
+                <MainLayout>
+                  <Orders />
+                </MainLayout>
+              )
+              : <Navigate to="/login" />
           }
         />
 
