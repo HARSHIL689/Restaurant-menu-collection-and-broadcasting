@@ -9,6 +9,10 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Admin from "./pages/Admin";
 import MainLayout from "./layouts/MainLayout";
 import ProtectedRoute from "./pages/ProtectedRoute";
+import RestaurantRegisterInfo from "./pages/RestaurantRegisterInfo";
+
+const isLoggedIn = () =>
+  localStorage.getItem("isLoggedIn") === "true";
 
 function App() {
   return (
@@ -18,6 +22,10 @@ function App() {
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route 
+          path = "/restaurant-register"
+          element = {<RestaurantRegisterInfo />} 
+        />
 
         {/* User Dashboard */}
         <Route
