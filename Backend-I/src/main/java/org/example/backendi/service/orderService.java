@@ -41,29 +41,27 @@ public class orderService {
             throw new IllegalArgumentException("User not found");
         }
 
-        System.out.println(request.menuId());
-        MenuStore menuStore = menuStoreRepository
-                .findById(request.menuId())
-                .orElseThrow(() -> new IllegalArgumentException("Menu not found"));
+        int updated = menuStoreRepository
+                .increaseOrderCountIfAvailable(
+                        request.menuId(),
+                        request.quantity()
+                );
 
-        int currentCount = menuStore.getOrerCount();
-        int limit = menuStore.getLimit();
-        int newCount = currentCount + request.quantity();
-
-        if (newCount > limit) {
-            throw new IllegalStateException(
-                    "Only " + (limit - currentCount) + " orders left"
-            );
+        if (updated == 0) {
+            throw new IllegalStateException("Orders are full");
         }
 
-        menuStore.setOrerCount(newCount);
-        menuStoreRepository.save(menuStore);
+        MenuStore menuStore = menuStoreRepository
+                .findById(request.menuId())
+                .orElseThrow();
 
+        // Create order
         Order order = new Order();
         order.setUser(user);
         order.setMenuStore(menuStore);
         order.setAddress(request.address());
         order.setQuantity(request.quantity());
+
         orderRepo.save(order);
 
         String to = menuStore.getPhone();
@@ -76,9 +74,10 @@ public class orderService {
                 user.getName(),
                 user.getPhone(),
                 request.address(),
-                newCount,
+                menuStore.getOrerCount(),
                 request.quantity()
         );
+
         return new OrderResponse(
                 menuStore.getRestaurant().getRestaurantName(),
                 request.quantity(),
