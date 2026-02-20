@@ -166,8 +166,17 @@ public class RestaurantService {
                         String originalMenu = menu_session.getMessage();
                         String finalMenu = originalMenu;
 
-                        if (translationService.containsGujarati(originalMenu)) {
-                            finalMenu = translationService.translateGujaratiToEnglish(originalMenu);
+                        System.out.println("Original menu:");
+                        System.out.println(originalMenu);
+
+                        boolean hasGujarati = translationService.containsGujarati(originalMenu);
+                        System.out.println("Contains Gujarati: " + hasGujarati);
+
+                        if (hasGujarati) {
+                            String translated = translationService.translateGujaratiToEnglish(originalMenu);
+                            System.out.println("Translated menu:");
+                            System.out.println(translated);
+                            finalMenu = translated;
                         }
                         store.setMenu(finalMenu);
                         store.setPrice(menu_session.getPrice());
