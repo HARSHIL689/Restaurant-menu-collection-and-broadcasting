@@ -18,6 +18,7 @@ public class MenuStore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String phone;
+    @Column(columnDefinition = "TEXT")
     private String menu;
     @Column(nullable = false,updatable = false)
     private LocalDateTime createdDate;

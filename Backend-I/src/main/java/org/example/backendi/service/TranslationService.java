@@ -16,17 +16,24 @@ public class TranslationService {
 
     public String translateGujaratiToEnglish(String text) {
         try {
-            int MAX_CHUNK_SIZE = 400; // keep safe margin
             StringBuilder result = new StringBuilder();
 
-            int start = 0;
+            String[] lines = text.split("\\n");
 
-            while (start < text.length()) {
-                int end = Math.min(start + MAX_CHUNK_SIZE, text.length());
+            for (String line : lines) {
 
-                String chunk = text.substring(start, end);
+                if (line.trim().isEmpty()) {
+                    result.append("\n");
+                    continue;
+                }
 
-                String encodedText = URLEncoder.encode(chunk, StandardCharsets.UTF_8);
+                String encodedText = URLEncoder.encode(line, StandardCharsets.UTF_8);
+
+                if (encodedText.length() > 450) {
+                    // Skip translation if single line too big
+                    result.append(line).append("\n");
+                    continue;
+                }
 
                 String url = "https://api.mymemory.translated.net/get"
                         + "?q=" + encodedText
@@ -40,12 +47,10 @@ public class TranslationService {
                         .path("translatedText")
                         .asText();
 
-                result.append(translated);
-
-                start = end;
+                result.append(translated).append("\n");
             }
 
-            return result.toString();
+            return result.toString().trim();
 
         } catch (Exception e) {
             e.printStackTrace();
