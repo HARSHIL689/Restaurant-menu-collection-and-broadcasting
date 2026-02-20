@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 public class TranslationService {
-
+    private static final Pattern GUJARATI_PATTERN = Pattern.compile("[\\u0A80-\\u0AFF]");
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -36,6 +36,6 @@ public class TranslationService {
     }
 
     public boolean containsGujarati(String text) {
-        return text.matches(".*[\\u0A80-\\u0AFF].*");
+        return GUJARATI_PATTERN.matcher(text).find();
     }
 }
