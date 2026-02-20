@@ -16,21 +16,39 @@ public class TranslationService {
 
     public String translateGujaratiToEnglish(String text) {
         try {
-            String encodedText = URLEncoder.encode(text, StandardCharsets.UTF_8);
+            int MAX_CHUNK_SIZE = 400; // keep safe margin
+            StringBuilder result = new StringBuilder();
 
-            String url = "https://api.mymemory.translated.net/get"
-                    + "?q=" + encodedText
-                    + "&langpair=gu|en";
+            int start = 0;
 
-            String response = restTemplate.getForObject(url, String.class);
+            while (start < text.length()) {
+                int end = Math.min(start + MAX_CHUNK_SIZE, text.length());
 
-            JsonNode root = objectMapper.readTree(response);
-            return root
-                    .path("responseData")
-                    .path("translatedText")
-                    .asText();
+                String chunk = text.substring(start, end);
+
+                String encodedText = URLEncoder.encode(chunk, StandardCharsets.UTF_8);
+
+                String url = "https://api.mymemory.translated.net/get"
+                        + "?q=" + encodedText
+                        + "&langpair=gu|en";
+
+                String response = restTemplate.getForObject(url, String.class);
+
+                JsonNode root = objectMapper.readTree(response);
+                String translated = root
+                        .path("responseData")
+                        .path("translatedText")
+                        .asText();
+
+                result.append(translated);
+
+                start = end;
+            }
+
+            return result.toString();
 
         } catch (Exception e) {
+            e.printStackTrace();
             return text;
         }
     }
