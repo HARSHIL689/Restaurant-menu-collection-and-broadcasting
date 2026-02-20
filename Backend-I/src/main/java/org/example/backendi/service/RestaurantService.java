@@ -32,6 +32,9 @@ public class RestaurantService {
     @Autowired
     private MenusessionRepo menusessionRepo;
 
+    @Autowired
+    private TranslationService translationService;
+
     private final Map<String, Object> phoneLocks = new ConcurrentHashMap<>();
 
     private Object getPhoneLock(String phone) {
@@ -160,7 +163,13 @@ public class RestaurantService {
                        // refreshSession(menu_session);
                         menusessionRepo.save(menu_session);
                         MenuStore store = new MenuStore();
-                        store.setMenu(menu_session.getMessage());
+                        String originalMenu = menu_session.getMessage();
+                        String finalMenu = originalMenu;
+
+                        if (translationService.containsGujarati(originalMenu)) {
+                            finalMenu = translationService.translateGujaratiToEnglish(originalMenu);
+                        }
+                        store.setMenu(finalMenu);
                         store.setPrice(menu_session.getPrice());
                         store.setLimit(menu_session.getLimit());
                         store.setTime_limit(menu_session.getTime());
