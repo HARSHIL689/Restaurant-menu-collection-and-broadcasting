@@ -21,7 +21,6 @@ public class MenuService {
     }
 
     public List<MenuResponse> getmenu() {
-
         List<MenuStore> mn = menuStoreRepository.findActiveMenus();
         List<MenuResponse> menuResponses = new ArrayList<>();
 
@@ -40,4 +39,34 @@ public class MenuService {
         }
         return menuResponses;
     }
+
+    public List<MenuResponse> getmenubySearch(String keyword) {
+
+        List<MenuStore> menus;
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            menus = menuStoreRepository.findActiveMenus();
+        } else {
+            menus = menuStoreRepository.searchActiveMenus(keyword);
+        }
+
+        List<MenuResponse> menuResponses = new ArrayList<>();
+
+        for (MenuStore m : menus) {
+            MenuResponse menuResponse = new MenuResponse(
+                    m.getPhone(),
+                    m.getMenu(),
+                    m.getPrice(),
+                    m.getId(),
+                    m.getCreatedDate(),
+                    m.getRestaurant().getRestaurantName(),
+                    m.getLimit(),
+                    m.getOrerCount()
+            );
+            menuResponses.add(menuResponse);
+        }
+        return menuResponses;
+    }
+
+
 }

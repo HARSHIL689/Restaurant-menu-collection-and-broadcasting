@@ -52,7 +52,9 @@ function App() {
           path="/admin"
           element={
             <ProtectedRoute allowedRole="Admin">
+              <MainLayout>
               <Admin />
+              </MainLayout>
             </ProtectedRoute>
           }
         />

@@ -21,7 +21,7 @@ function AdminDashboard() {
           <h1 className="text-xl font-semibold text-gray-800">
             🛠️ Admin Panel – {studentName}
           </h1>
-
+          
           <button
             onClick={handleLogout}
             className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-red-500 text-white hover:bg-red-600 transition"

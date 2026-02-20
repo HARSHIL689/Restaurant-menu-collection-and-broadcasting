@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins="http://localhost:5173")
+@CrossOrigin(origins="http://localhost:5173, https://nakita-unfrequentative-buckishly.ngrok")
 @RestController
 public class MenuController {
 
@@ -22,9 +22,12 @@ public class MenuController {
     @Autowired
     private orderService orderService;
 
+
     @GetMapping("api/message")
-    public List<MenuResponse> getMenus(){
-        return menuService.getmenu();
+    public List<MenuResponse> getMenus(
+            @RequestParam(required = false) String keyword
+    ) {
+        return menuService.getmenubySearch(keyword);
     }
 
     @PostMapping("api/response")

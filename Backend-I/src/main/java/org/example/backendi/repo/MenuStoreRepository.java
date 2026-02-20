@@ -27,5 +27,15 @@ public interface MenuStoreRepository extends JpaRepository<MenuStore,Long> {
     AND m.OrerCount < m.limit
     """)
     List<MenuStore> findActiveMenus();
+    @Query("""
+SELECT m FROM MenuStore m
+WHERE m.expiresAt > CURRENT_TIMESTAMP
+AND m.OrerCount < m.limit
+AND (
+    LOWER(m.menu) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    OR LOWER(m.restaurant.RestaurantName) LIKE LOWER(CONCAT('%', :keyword, '%')) 
+)
+""")
+    List<MenuStore> searchActiveMenus(@Param("keyword") String keyword);
 
 }

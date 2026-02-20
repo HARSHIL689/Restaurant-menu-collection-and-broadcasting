@@ -64,16 +64,6 @@ function Admin() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-orange-50 p-8">
-      {/* Header */}
-      <div className="mb-10">
-        <h1 className="text-4xl font-bold text-gray-800">
-          Admin Dashboard
-        </h1>
-        <p className="text-gray-500 mt-2">
-          Manage restaurants and view monthly analytics
-        </p>
-      </div>
-
       {/* Summary Cards */}
       <div className="grid md:grid-cols-3 gap-6 mb-12">
 
